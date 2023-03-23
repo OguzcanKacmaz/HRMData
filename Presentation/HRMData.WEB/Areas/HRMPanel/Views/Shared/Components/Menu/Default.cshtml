@@ -1,0 +1,187 @@
+﻿@{
+    var IsInManager = User.IsInRole("Manager");
+    var IsInPersonel = User.IsInRole("Personel");
+    var IsInAdmin = User.IsInRole("Admin");
+}
+<div class="menu">
+    <ul class="list">
+        <vc:left-user />
+        @*<li class="header">-- Main</li>*@
+        @* <li class="active">
+        <a asp-controller="Profile" asp-action="Index">
+        <i data-feather="monitor"></i>
+        <span>Profil</span>
+        </a>
+        </li>*@
+
+        <li>
+            <a onClick="return false;" class="menu-toggle">
+                <i data-feather="monitor"></i>
+                <span>Profil</span>
+            </a>
+            <ul class="ml-menu">
+                <li>
+                    <a asp-controller="Profile" asp-action="Index">Profil Sayfası</a>
+                </li>
+            </ul>
+        </li>
+        @if (IsInManager || IsInPersonel)
+        {
+            <li>
+                <a onClick="return false;" class="menu-toggle">
+                    <i data-feather="clipboard"></i>
+                    <span>Talep İşlemleri</span>
+                </a>
+                <ul class="ml-menu">
+                    <li>
+                        <a href="#" onClick="return false;" class="menu-toggle">
+                            <span>Avans İşlemleri</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a asp-controller="Advance" asp-action="AddEmployeeAdvance">
+                                    <span>Avans Talebi Oluştur</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Advance" asp-action="Index">
+                                    <span>Avans Taleplerim</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" onClick="return false;" class="menu-toggle">
+                            <span>Harcama İşlemleri</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a asp-controller="Expense" asp-action="AddEmployeeExpense">
+                                    <span>Harcama Talebi Oluştur</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Expense" asp-action="Index">
+                                    <span>Harcama Taleplerim</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" onClick="return false;" class="menu-toggle">
+                            <span>İzin İşlemleri</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a asp-controller="Permission" asp-action="AddEmployeePermisson">
+                                    <span>İzin Talebi Oluştur</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Permission" asp-action="Index">
+                                    <span>İzin Taleplerim</span>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                </ul>
+
+            </li>
+        }
+        @if (IsInManager)
+        {
+            <li>
+                <a onClick="return false;" class="menu-toggle">
+                    <i data-feather="users"></i>
+                    <span>Personel İşlemleri</span>
+                </a>
+                <ul class="ml-menu">
+                    <li>
+                        <a asp-controller="Manager" asp-action="AddPersonel">
+                            <span>Personel Ekle</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a asp-controller="Manager" asp-action="Index">
+                            <span>Personel Listele</span>
+                        </a>
+
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a onClick="return false;" class="menu-toggle">
+                    <i data-feather="book-open"></i>
+                    <span>Personel Talep İşlemleri</span>
+                </a>
+                <ul class="ml-menu">
+                    <li>
+                        <a asp-controller="Manager" asp-action="AdvanceRequest">
+                            <span>Personel Avans Talepleri</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a asp-controller="Manager" asp-action="ExpenseRequest">
+                            <span>Personel Harcama Talepleri</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a asp-controller="Manager" asp-action="PermissionRequest">
+                            <span>Personel İzin Talepleri</span>
+                        </a>
+
+                    </li>
+                </ul>
+            </li>
+        }
+        @if (IsInAdmin)
+        {
+            <li>
+                <a onClick="return false;" class="menu-toggle">
+                    <i data-feather="user"></i>
+                    <span>Şirket Yöneticisi İşlemleri</span>
+                </a>
+                <ul class="ml-menu">
+                    <li>
+                        <a asp-controller="Admin" asp-action="AddManager">
+                            <span>Şirket Yöneticisi Ekle</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a asp-controller="Admin" asp-action="Index">
+                            <span>Şirket Yöneticisi Listele</span>
+                        </a>
+
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a onClick="return false;" class="menu-toggle">
+                    <i data-feather="trello"></i>
+                    <span>Şirket İşlemleri</span>
+                </a>
+                <ul class="ml-menu">
+                    <li>
+                        <a asp-controller="Admin" asp-action="AddCompany">
+                            <span>Şirket Ekle</span>
+                        </a>
+
+                    </li>
+                    <li>
+                        <a asp-controller="Admin" asp-action="ListCompany">
+                            <span>Şirket Listele</span>
+                        </a>
+
+                    </li>
+                </ul>
+            </li>
+        }
+    </ul>
+</div>
+
+

@@ -1,0 +1,681 @@
+﻿@model EmployeeExpenseTransactionsViewModel
+@{
+    ViewData["Title"] = "Harcama İşlemleri";
+    string Success = (string)TempData["Success"]!;
+    string Error = (string)TempData["Error"]!;
+    var IsInManager = User.IsInRole("Manager");
+}
+@section HeadHRMPanel{
+    <link href="~/assets/css/bundles/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/assets/css/bundles/sweetalert.css" rel="stylesheet">
+                    }
+@*Sayfa Navigasyonu*@
+@*<div class="block-header">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <ul class="breadcrumb breadcrumb-style ">
+                <li class="breadcrumb-item">
+                    <h4 class="page-title">HRMPanel</h4>
+                </li>
+                <li class="breadcrumb-item bcrumb-1">
+                    <a asp-area="HRMPanel" asp-action="Index" asp-controller="Dashboard">
+                        <i class="fas fa-home"></i> AnaSayfa
+                    </a>
+                </li>
+                <li class="breadcrumb-item active">Harcama Talep İşlemleri</li>
+            </ul>
+        </div>
+    </div>
+</div>*@
+@*Sayfa Navigasyon Bitiş*@
+
+<div class="row clearfix justify-content-center">
+    <div class="col-lg-10 col-md-12">
+        <div>
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="row ">
+                        <div class="col-xl-3 col-lg-6 col-6">
+                            <div class="card bg-purple h-75">
+                                <div class="info-box-5 p-4">
+                                    <div class="card-icon card-icon-large"><i class="far fa-window-restore"></i></div>
+                                    <div class="mb-4">
+                                        <h5 class="font-18 mb-0">Tüm Harcama Taleplerim</h5>
+                                    </div>
+                                    <div class="row align-items-center mb-2 d-flex">
+                                        <div class="col-8">
+                                            <h2 class="d-flex align-items-center mb-0">
+                                                @Model.AllExpenses.Count
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-6">
+                            <div class="card bg-amber h-75">
+                                <div class="info-box-5 p-4">
+                                    <div class="card-icon card-icon-large"><i class="fas fa-users"></i></div>
+                                    <div class="mb-4">
+                                        <h5 class="font-18 mb-0">Devam Eden Taleplerim</h5>
+                                    </div>
+                                    <div class="row align-items-center mb-2 d-flex">
+                                        <div class="col-8">
+                                            <h2 class="d-flex align-items-center mb-0">
+                                                @Model.InProgressExpenses.Count
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-6">
+                            <div class="card bg-teal h-75">
+                                <div class="info-box-5 p-4">
+                                    <div class="card-icon card-icon-large"><i class="fas fa-tasks"></i></div>
+                                    <div class="mb-4">
+                                        <h5 class="font-18 mb-0">Onaylanan Taleplerim</h5>
+                                    </div>
+                                    <div class="row align-items-center mb-2 d-flex">
+                                        <div class="col-8">
+                                            <h2 class="d-flex align-items-center mb-0">
+                                                @Model.ApprovedExpenses.Count
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-lg-6 col-6">
+                            <div class="card bg-deep-orange h-75">
+                                <div class="info-box-5 p-4">
+                                    <div class="card-icon card-icon-large"><i class="fas fa-money-check-alt"></i></div>
+                                    <div class="mb-4">
+                                        <h5 class="font-18 mb-0">Reddedilen Taleplerim</h5>
+                                    </div>
+                                    <div class="row align-items-center mb-2 d-flex">
+                                        <div class="col-8">
+                                            <h2 class="d-flex align-items-center mb-0">
+                                                @Model.RejectedExpenses.Count
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-10 col-md-12 mb-5 col-12">
+        <div>
+            <div class="contact-grid">
+                <div class="row">
+                    <div class="@(IsInManager ? "bg-blue-grey": "card-bg-header") p-3 rounded-pill">
+                        <div class="p-2">
+                            <ul class="nav d-flex justify-content-evenly">                                
+                                <li class="nav-item tab-all">
+                                    <a class="nav-link active" href="#expenseRequest"
+                                       data-bs-toggle="tab">
+                                        Tüm Harcama Talepleri
+                                    </a>
+                                </li>
+                                <li class="nav-item tab-all">
+                                    <a class="nav-link" href="#inProgress"
+                                       data-bs-toggle="tab">
+                                        Devam Eden Harcama Talepleri
+                                    </a>
+                                </li>
+                                <li class="nav-item tab-all">
+                                    <a class="nav-link" href="#approvedRequest"
+                                       data-bs-toggle="tab">
+                                        Onaylanan Harcama Talepleri
+                                    </a>
+                                </li>
+                                <li class="nav-item tab-all">
+                                    <a class="nav-link" href="#rejectedRequest"
+                                       data-bs-toggle="tab">
+                                        Reddedilen Harcama Talepleri
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-10 col-md-12">
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="expenseRequest" aria-expanded="false">
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="card project_widget">
+                            <div class="header @(IsInManager ? "bg-blue-grey":"bg-pink") rounded-top">
+                                <h2>Tüm Harcama Talepleri</h2>
+                            </div>
+                            <div class="body">
+                                @*Başlangıç*@
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="card">
+                                            <div class="body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover js-basic-example contact_list">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center"> Onay Durumu </th>
+                                                                <th class="text-center"> Tür </th>
+                                                                <th class="text-center"> Talep Tarihi </th>
+                                                                <th class="text-center"> Cevaplanma Tarihi </th>
+                                                                <th class="text-center"> Aksiyon </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var expense in Model.AllExpenses)
+                                                            {
+                                                                var guid = Guid.NewGuid().ToString();
+                                                                <tr class="odd gradeX">
+                                                                    <td class="text-center">
+                                                                        @if (expense.ApprovalStatus == ApprovalStatus.Approved)
+                                                                        {
+                                                                            <button class="btn bg-teal rounded waves-effect cursor-default">Onaylandı</button>
+                                                                        }
+                                                                        else if (expense.ApprovalStatus == ApprovalStatus.PendingApproval)
+                                                                        {
+                                                                            <button class="btn bg-amber rounded waves-effect cursor-default">Beklemede</button>
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            <button class="btn bg-deep-orange rounded waves-effect cursor-default">Reddedildi</button>
+                                                                        }
+                                                                        @* @(advance.ApprovalStatus == ApprovalStatus.Approved ? "Onaylandı" : advance.ApprovalStatus == ApprovalStatus.Denied ? "Reddedildi" : advance.ApprovalStatus == ApprovalStatus.PendingApproval ? "Beklemede")*@
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        @(expense.ExpenseType == ExpenseType.TransportationExpenses ? "Taşıt Harcamaları" : expense.ExpenseType == ExpenseType.FoodExpenses ? "Yemek Harcamaları" : expense.ExpenseType == ExpenseType.TravelExpenses ? "Seyahat Harcamaları" : expense.ExpenseType == ExpenseType.ClothingExpenses ? "Giyim Harcamaları" : "İletişim Harcamaları")</td>
+                                                                    <td class="text-center">@expense.RequestDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                                                    <td class="text-center">@(expense.ReplyDate.ToString() == string.Empty ? "-" : expense.ReplyDate!.Value.ToString("dd/MM/yyyy HH:mm:ss"))</td>
+                                                                    <td class="text-center">
+                                                                        <!-- Button trigger modal -->
+                                                                        <div>
+                                                                            <a title="Detay" class="btn bg-transparent waves-effect shadow-none" data-bs-toggle="modal" data-bs-target="#staticBackdrop_@guid">
+                                                                                <i class="fas fa-info-circle fa-2x blue-text"></i>
+                                                                            </a>
+
+                                                                            @if (expense.ApprovalStatus == ApprovalStatus.PendingApproval)
+                                                                            {
+                                                                                <a id="btnCancel" class="btn bg-transparent waves-effect shadow-none" asp-controller="Expense" asp-action="CancelExpense" asp-route-id="@expense.Id" title="İptal">
+                                                                                    <i class="fas fa-ban fa-2x red-text"></i>
+                                                                                </a>
+                                                                            }
+                                                                        </div>
+                                                                        <!-- Modal -->
+                                                                        <div class="modal fade " id="staticBackdrop_@guid" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                                <div class="modal-content p-0 rounded-3 ">
+                                                                                    <div class="header card-bg-header d-flex justify-content-between align-items-baseline">
+                                                                                        <h2 class="white-text">
+                                                                                            Avans Detayları
+                                                                                        </h2>
+                                                                                        <button class="btn bg-transparent shadow-none" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                                                                            <i class="material-icons text-white">close</i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="body mt-4">
+                                                                                        <div class="list-group">
+                                                                                            <div class="d-flex flex-column align-items-center">
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Talep Tarihi</label>
+                                                                                                    <label class="form-control col me-3 center">@expense.RequestDate.ToString("dd/MM/yyyy HH:mm:ss")</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Tür</label>
+                                                                                                    <label class="form-control col center me-3"> @(expense.ExpenseType == ExpenseType.TransportationExpenses ? "Taşıt Harcamaları" : expense.ExpenseType == ExpenseType.FoodExpenses ? "Yemek Harcamaları" : expense.ExpenseType == ExpenseType.TravelExpenses ? "Seyahat Harcamaları" : expense.ExpenseType == ExpenseType.ClothingExpenses ? "Giyim Harcamaları" : "İletişim Harcamaları")</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Talep Tutarı</label>
+                                                                                                    <label class="form-control col center me-3">@expense.Amount</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Talep Birimi</label>
+                                                                                                    <label class="form-control col center me-3">@expense.Currency</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Onay Durumu</label>
+                                                                                                    <label class="form-control col center me-3">@(expense.ApprovalStatus == ApprovalStatus.Approved ? "Onaylandı" : expense.ApprovalStatus == ApprovalStatus.Denied ? "Reddedildi" :"Beklemede")</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Cevaplanma Tarihi</label>
+                                                                                                    <label class="form-control col center me-3">@(expense.ReplyDate.ToString() == string.Empty ? "-" : expense.ReplyDate!.Value.ToString("dd/MM/yyyy HH:mm:ss"))</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer mb-4">
+                                                                                        <a class="btn @(IsInManager ? "bg-blue-grey":"bg-pink")" href="~/files/@expense.ExpenseDocument" target="_blank"> Dökümanı Görüntüle</a>
+                                                                                        <button class="btn btn-secondary me-4 @(IsInManager ? "bg-blue-grey":"bg-pink")" data-bs-dismiss="modal">Kapat</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                        @*<tfoot>
+                                                        <tr>
+                                                        <th class="text-center"> Talep Tarihi </th>
+                                                        <th class="text-center"> Tür </th>
+                                                        <th class="center"> Talep Edilen Tutar </th>
+                                                        <th class="center"> Para Birimi </th>
+                                                        <th class="center"> Türü </th>
+                                                        <th class="text-center"> Onay Durumu </th>
+                                                        <th class="text-center"> Cevaplanma Tarihi </th>
+                                                        <th class="text-center"> Aksiyon </th>
+                                                        </tr>
+                                                        </tfoot>*@
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*Bitiş*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane " id="inProgress" aria-expanded="false">
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="card project_widget">
+                            <div class="header @(IsInManager ? "bg-blue-grey":"bg-pink") rounded-top">
+                                <h2>Devam Eden Harcama Talepleri</h2>
+                            </div>
+                            <div class="body">
+                                @*Başlangıç*@
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="card">
+                                            <div class="body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover js-basic-example contact_list">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center"> Onay Durumu </th>
+                                                                <th class="text-center"> Tür </th>
+                                                                <th class="text-center"> Talep Tarihi </th>
+                                                                <th class="text-center"> Cevaplanma Tarihi </th>
+                                                                <th class="text-center"> Aksiyon </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var expense in Model.InProgressExpenses)
+                                                            {
+                                                                var guid = Guid.NewGuid().ToString();
+                                                                <tr class="odd gradeX">
+                                                                    <td class="text-center">
+                                                                        <button class="btn bg-amber rounded waves-effect cursor-default">Beklemede</button>
+                                                                    </td>
+                                                                    <td class="text-center"> @(expense.ExpenseType == ExpenseType.TransportationExpenses ? "Taşıt Harcamaları" : expense.ExpenseType == ExpenseType.FoodExpenses ? "Yemek Harcamaları" : expense.ExpenseType == ExpenseType.TravelExpenses ? "Seyahat Harcamaları" : expense.ExpenseType == ExpenseType.ClothingExpenses ? "Giyim Harcamaları" : "İletişim Harcamaları")</td>
+                                                                    <td class="text-center">@expense.RequestDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                                                    <td class="text-center">@(expense.ReplyDate.ToString() == string.Empty ? "-" : expense.ReplyDate!.Value.ToString("dd/MM/yyyy HH:mm:ss"))</td>
+                                                                    <td class="text-center">
+                                                                        <!-- Button trigger modal -->
+                                                                        <div>
+                                                                            <a title="Detay" class="btn bg-transparent waves-effect shadow-none" data-bs-toggle="modal" data-bs-target="#staticBackdrop_@guid">
+                                                                                <i class="fas fa-info-circle fa-2x blue-text"></i>
+                                                                            </a>
+
+                                                                            @if (expense.ApprovalStatus == ApprovalStatus.PendingApproval)
+                                                                            {
+                                                                                <a id="btnCancel" class="btn bg-transparent waves-effect shadow-none" asp-controller="Expense" asp-action="CancelExpense" asp-route-id="@expense.Id" title="İptal">
+                                                                                    <i class="fas fa-ban fa-2x red-text"></i>
+                                                                                </a>
+                                                                            }
+                                                                        </div>
+                                                                        <!-- Modal -->
+                                                                        <div class="modal fade " id="staticBackdrop_@guid" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                                <div class="modal-content p-0 rounded-3 ">
+                                                                                    <div class="header card-bg-header d-flex justify-content-between align-items-baseline">
+                                                                                        <h2 class="white-text">
+                                                                                            Avans Detayları
+                                                                                        </h2>
+                                                                                        <button class="btn bg-transparent shadow-none" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                                                                            <i class="material-icons text-white">close</i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="body mt-4">
+                                                                                        <div class="list-group">
+                                                                                            <div class="d-flex flex-column align-items-center">
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Talep Tarihi</label>
+                                                                                                    <label class="form-control col me-3 center">@expense.RequestDate.ToString("dd/MM/yyyy HH:mm:ss")</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Tür</label>
+                                                                                                    <label class="form-control col center me-3"> @(expense.ExpenseType == ExpenseType.TransportationExpenses ? "Taşıt Harcamaları" : expense.ExpenseType == ExpenseType.FoodExpenses ? "Yemek Harcamaları" : expense.ExpenseType == ExpenseType.TravelExpenses ? "Seyahat Harcamaları" : expense.ExpenseType == ExpenseType.ClothingExpenses ? "Giyim Harcamaları" : "İletişim Harcamaları")</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Talep Tutarı</label>
+                                                                                                    <label class="form-control col center me-3">@expense.Amount</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Talep Birimi</label>
+                                                                                                    <label class="form-control col center me-3">@expense.Currency</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Onay Durumu</label>
+                                                                                                    <label class="form-control col center me-3">Beklemede</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Cevaplanma Tarihi</label>
+                                                                                                    <label class="form-control col center me-3"> @(expense.ReplyDate.ToString() == string.Empty ? "-" : expense.ReplyDate!.Value.ToString("dd/MM/yyyy HH:mm:ss"))</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer mb-4">
+                                                                                        <a class="btn @(IsInManager ? "bg-blue-grey":"bg-pink")" href="~/files/@expense.ExpenseDocument" target="_blank"> Dökümanı Görüntüle</a>
+                                                                                        <button class="btn btn-secondary me-4 @(IsInManager ? "bg-blue-grey":"bg-pink")" data-bs-dismiss="modal">Kapat</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                        @*<tfoot>
+                                                        <tr>
+                                                        <th class="text-center"> Talep Tarihi </th>
+                                                        <th class="text-center"> Tür </th>
+                                                        <th class="center"> Talep Edilen Tutar </th>
+                                                        <th class="center"> Para Birimi </th>
+                                                        <th class="center"> Türü </th>
+                                                        <th class="text-center"> Onay Durumu </th>
+                                                        <th class="text-center"> Cevaplanma Tarihi </th>
+                                                        <th class="text-center"> Aksiyon </th>
+                                                        </tr>
+                                                        </tfoot>*@
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*Bitiş*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="approvedRequest" aria-expanded="false">
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="card project_widget">
+                            <div class="header @(IsInManager ? "bg-blue-grey":"bg-pink") rounded-top">
+                                <h2>Onaylanan Harcama Talepleri</h2>
+                            </div>
+                            <div class="body">
+                                @*Başlangıç*@
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="card">
+
+                                            <div class="body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover js-basic-example contact_list">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center"> Onay Durumu </th>
+                                                                <th class="text-center"> Tür </th>
+                                                                <th class="text-center"> Talep Tarihi </th>
+                                                                <th class="text-center"> Cevaplanma Tarihi </th>
+                                                                <th class="text-center"> Aksiyon </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var expense in Model.ApprovedExpenses)
+                                                            {
+                                                                var guid = Guid.NewGuid().ToString();
+                                                                <tr class="odd gradeX">
+                                                                    <td class="text-center">
+                                                                        <button class="btn bg-teal rounded waves-effect cursor-default">Onaylandı</button>
+                                                                    </td>
+                                                                    <td class="text-center"> @(expense.ExpenseType == ExpenseType.TransportationExpenses ? "Taşıt Harcamaları" : expense.ExpenseType == ExpenseType.FoodExpenses ? "Yemek Harcamaları" : expense.ExpenseType == ExpenseType.TravelExpenses ? "Seyahat Harcamaları" : expense.ExpenseType == ExpenseType.ClothingExpenses ? "Giyim Harcamaları" : "İletişim Harcamaları")</td>
+                                                                    <td class="text-center">@expense.RequestDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                                                    <td class="text-center">@(expense.ReplyDate.ToString() == string.Empty ? "-" : expense.ReplyDate!.Value.ToString("dd/MM/yyyy HH:mm:ss"))</td>
+                                                                    <td class="text-center">
+                                                                        <!-- Button trigger modal -->
+                                                                        <button title="Detay" type="button" class="btn bg-transparent waves-effect shadow-none" data-bs-toggle="modal" data-bs-target="#staticBackdrop_@guid">
+                                                                            <i class="fas fa-info-circle fa-2x blue-text"></i>
+                                                                        </button>
+
+                                                                        <!-- Modal -->
+                                                                        <div class="modal fade " id="staticBackdrop_@guid" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                                <div class="modal-content p-0 rounded-3 ">
+                                                                                    <div class="header card-bg-header d-flex justify-content-between align-items-baseline">
+                                                                                        <h2 class="white-text">
+                                                                                            Avans Detayları
+                                                                                        </h2>
+                                                                                        <button class="btn bg-transparent shadow-none" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                                                                            <i class="material-icons text-white">close</i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="body mt-4">
+                                                                                        <div class="list-group">
+                                                                                            <div class="d-flex flex-column align-items-center">
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Talep Tarihi</label>
+                                                                                                    <label class="form-control col me-3 center">@expense.RequestDate.ToString("dd/MM/yyyy HH:mm:ss")</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Tür</label>
+                                                                                                    <label class="form-control col center me-3"> @(expense.ExpenseType == ExpenseType.TransportationExpenses ? "Taşıt Harcamaları" : expense.ExpenseType == ExpenseType.FoodExpenses ? "Yemek Harcamaları" : expense.ExpenseType == ExpenseType.TravelExpenses ? "Seyahat Harcamaları" : expense.ExpenseType == ExpenseType.ClothingExpenses ? "Giyim Harcamaları" : "İletişim Harcamaları")</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Talep Tutarı</label>
+                                                                                                    <label class="form-control col center me-3">@expense.Amount</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Talep Birimi</label>
+                                                                                                    <label class="form-control col center me-3">@expense.Currency</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Onay Durumu</label>
+                                                                                                    <label class="form-control col center me-3">Onaylandı</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Cevaplanma Tarihi</label>
+                                                                                                    <label class="form-control col center me-3">@(expense.ReplyDate.ToString() == string.Empty ? "-" : expense.ReplyDate!.Value.ToString("dd/MM/yyyy HH:mm:ss"))</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer mb-4">
+                                                                                        <a class="btn @(IsInManager ? "bg-blue-grey":"bg-pink")" href="~/files/@expense.ExpenseDocument" target="_blank"> Dökümanı Görüntüle</a>
+                                                                                        <button class="btn btn-secondary me-4 @(IsInManager ? "bg-blue-grey":"bg-pink")" data-bs-dismiss="modal">Kapat</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                        @*<tfoot>
+                                                        <tr>
+                                                        <th class="text-center"> Talep Tarihi </th>
+                                                        <th class="text-center"> Tür </th>
+                                                        <th class="center"> Talep Edilen Tutar </th>
+                                                        <th class="center"> Para Birimi </th>
+                                                        <th class="center"> Türü </th>
+                                                        <th class="text-center"> Onay Durumu </th>
+                                                        <th class="text-center"> Cevaplanma Tarihi </th>
+                                                        <th class="text-center"> Aksiyon </th>
+                                                        </tr>
+                                                        </tfoot>*@
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*Bitiş*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="rejectedRequest" aria-expanded="false">
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="card project_widget">
+                            <div class="header @(IsInManager ? "bg-blue-grey":"bg-pink") rounded-top">
+                                <h2>Reddedilen Harcama Talepleri</h2>
+                            </div>
+                            <div class="body">
+                                @*Başlangıç*@
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12">
+                                        <div class="card">
+
+                                            <div class="body">
+                                                <div class="table-responsive">
+                                                    <table class="table table-hover js-basic-example contact_list">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center"> Onay Durumu </th>
+                                                                <th class="text-center"> Tür </th>
+                                                                <th class="text-center"> Talep Tarihi </th>
+                                                                <th class="text-center"> Cevaplanma Tarihi </th>
+                                                                <th class="text-center"> Aksiyon </th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var expense in Model.RejectedExpenses)
+                                                            {
+                                                                var guid = Guid.NewGuid().ToString();
+                                                                <tr class="odd gradeX">
+                                                                    <td class="text-center">
+                                                                        <button class="btn bg-deep-orange rounded waves-effect cursor-default">Reddedildi</button>
+                                                                    </td>
+                                                                    <td class="text-center"> @(expense.ExpenseType == ExpenseType.TransportationExpenses ? "Taşıt Harcamaları" : expense.ExpenseType == ExpenseType.FoodExpenses ? "Yemek Harcamaları" : expense.ExpenseType == ExpenseType.TravelExpenses ? "Seyahat Harcamaları" : expense.ExpenseType == ExpenseType.ClothingExpenses ? "Giyim Harcamaları" : "İletişim Harcamaları")</td>
+                                                                    <td class="text-center">@expense.RequestDate.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                                                    <td class="text-center">@(expense.ReplyDate.ToString() == string.Empty ? "-" : expense.ReplyDate!.Value.ToString("dd/MM/yyyy HH:mm:ss"))</td>
+                                                                    <td class="text-center">
+                                                                        <!-- Button trigger modal -->
+                                                                        <button title="Detay" type="button" class="btn bg-transparent waves-effect shadow-none" data-bs-toggle="modal" data-bs-target="#staticBackdrop_@guid">
+                                                                            <i class="fas fa-info-circle fa-2x blue-text"></i>
+                                                                        </button>
+
+                                                                        <!-- Modal -->
+                                                                        <div class="modal fade " id="staticBackdrop_@guid" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                                <div class="modal-content p-0 rounded-3 ">
+                                                                                    <div class="header card-bg-header d-flex justify-content-between align-items-baseline">
+                                                                                        <h2 class="white-text">
+                                                                                            Avans Detayları
+                                                                                        </h2>
+                                                                                        <button class="btn bg-transparent shadow-none" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                                                                            <i class="material-icons text-white">close</i>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="body mt-4">
+                                                                                        <div class="list-group">
+                                                                                            <div class="d-flex flex-column align-items-center">
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Talep Tarihi</label>
+                                                                                                    <label class="form-control col me-3 center">@expense.RequestDate.ToString("dd/MM/yyyy HH:mm:ss")</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Tür</label>
+                                                                                                    <label class="form-control col center me-3"> @(expense.ExpenseType == ExpenseType.TransportationExpenses ? "Taşıt Harcamaları" : expense.ExpenseType == ExpenseType.FoodExpenses ? "Yemek Harcamaları" : expense.ExpenseType == ExpenseType.TravelExpenses ? "Seyahat Harcamaları" : expense.ExpenseType == ExpenseType.ClothingExpenses ? "Giyim Harcamaları" : "İletişim Harcamaları")</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Talep Tutarı</label>
+                                                                                                    <label class="form-control col center me-3">@expense.Amount</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Talep Birimi</label>
+                                                                                                    <label class="form-control col center me-3">@expense.Currency</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Onay Durumu</label>
+                                                                                                    <label class="form-control col center me-3">Reddedildi</label>
+                                                                                                </div>
+                                                                                                <div class="row form-group d-flex align-items-baseline justify-content-center">
+                                                                                                    <label class="fw-bold col-sm-5">Cevaplanma Tarihi</label>
+                                                                                                    <label class="form-control col center me-3">@(expense.ReplyDate.ToString() == string.Empty ? "-" : expense.ReplyDate!.Value.ToString("dd/MM/yyyy HH:mm:ss"))</label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="modal-footer mb-4">
+                                                                                        <a class="btn @(IsInManager ? "bg-blue-grey":"bg-pink")" href="~/files/@expense.ExpenseDocument" target="_blank"> Dökümanı Görüntüle</a>
+                                                                                        <button class="btn btn-secondary me-4 @(IsInManager ? "bg-blue-grey":"bg-pink")" data-bs-dismiss="modal">Kapat</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                        @*<tfoot>
+                                                        <tr>
+                                                        <th class="text-center"> Talep Tarihi </th>
+                                                        <th class="text-center"> Tür </th>
+                                                        <th class="center"> Talep Edilen Tutar </th>
+                                                        <th class="center"> Para Birimi </th>
+                                                        <th class="center"> Türü </th>
+                                                        <th class="text-center"> Onay Durumu </th>
+                                                        <th class="text-center"> Cevaplanma Tarihi </th>
+                                                        <th class="text-center"> Aksiyon </th>
+                                                        </tr>
+                                                        </tfoot>*@
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*Bitiş*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+@section ScriptsHRMPanel{
+    <script src="~/assets/js/table.min.js"></script>
+    <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
+    <script src="~/assets/js/pages/ui/dialogs.js"></script>
+    <script src="~/assets/js/bundles/sweetalert.min.js"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        let success = "@Success";
+        let error = "@Error"
+        if (success)
+            messageSuccessShow(success)
+        else if (error)
+            messageErrorShow(error)
+    </script>
+
+
+                    }

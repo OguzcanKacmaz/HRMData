@@ -1,0 +1,13 @@
+﻿@model EmployeeCardViewModel
+
+<li class="sidebar-user-panel active mb-4">
+    <div class="user-panel">
+        <div class=" image">
+            <img src="~/img/@Model.Photo" class="user-img-style" alt="User Image" />
+        </div>
+    </div>
+    <div class="profile-usertitle">
+        <div class="sidebar-userpic-name"> @Model.FullName </div>
+        <div class="profile-usertitle-job">@Model.TitleName</div>
+    </div>
+</li>

@@ -1,0 +1,168 @@
+﻿@model AddEmployeeExpenseViewModel
+@{
+    ViewData["Title"] = "Harcama Talep İşlemleri";
+    string Success = (string)TempData["Success"]!;
+    string Error = (string)TempData["Error"]!;
+    var IsInManager = User.IsInRole("Manager");
+}
+@section HeadHRMPanel{
+    <link href="~/assets/css/bundles/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/assets/css/bundles/sweetalert.css" rel="stylesheet">
+}
+
+@*Sayfa Navigasyonu*@
+@*<div class="block-header">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <ul class="breadcrumb breadcrumb-style ">
+                <li class="breadcrumb-item">
+                </li>
+                <li>
+                    <a asp-area="HRMPanel" asp-action="Index" asp-controller="Dashboard">AnaSayfa</a>
+                </li>
+                <li class="breadcrumb-item active">İşlemler</li>
+                <li class="breadcrumb-item active">Avans İşlemleri</li>
+                <li class="breadcrumb-item active">Avans Talebi Oluştur</li>
+            </ul>
+        </div>
+    </div>
+</div>*@
+@*Sayfa Navigasyon Bitiş*@
+<div class="row clearfix justify-content-center mt-5">
+    <div class="col-lg-10 col-md-12 col-sm-12">
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active show" id="newexpense" aria-expanded="false">
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                       <div class="card project_widget mt-5">
+                            <div class="header @(IsInManager ? "bg-blue-grey":"bg-pink") rounded-top mb-5">
+                                <h2>Harcama Talebi Oluştur</h2>
+                            </div>
+                            <div class="body p-4 mt-4 d-flex justify-content-center align-items-center">
+                                @*Başlangıç*@
+                                <div class="col-lg-10 col-md-12 ">
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="detail" aria-expanded="false">
+                                            <div class="row clearfix col-sm-12">
+                                                <!-- Başlangıç -->
+                                                <form class="form-horizontal" asp-action="AddEmployeeExpense" asp-controller="Expense" method="post" asp-area="HRMPanel" enctype="multipart/form-data">
+                                                    <!-- 1.prop -->
+                                                    <div class="row clearfix align-items-baseline justify-content-center">
+                                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-4 mt-4">
+                                                            <label asp-for="@Model.Currency" class="fw-bold" for="AdvancePaymentType">Para Birimi</label>
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-6 col-sm-12 col-xs-4 mt-4">
+                                                            <div class="form-group">
+                                                                @Html.DropDownListFor(m => m.Currency,
+                                                                Enum.GetValues(typeof(Currency)).Cast<Currency>()
+                                                                .Select(e => new SelectListItem()
+                                                                { Text = e.ToString(), Value = ((int)e).ToString() }),
+                                                                "Para Birimi",
+                                                                new { @class = "form-select mb-3", id = "comboAdvanceCurrency" })
+
+                                                                <span class="text-danger " asp-validation-for="@Model.Currency"></span>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix align-items-baseline justify-content-center">
+                                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-5">
+                                                            <label class="fw-bold" asp-for="@Model.Amount">Tutarı</label>
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-6 col-sm-12 col-xs-5">
+                                                            <div class="form-group">
+                                                                <div class="form-line">
+                                                                    <input asp-for="@Model.Amount" placeholder="Harcama Talep Tutarını Giriniz..." type="number" id="txtDescription" class="form-control mb-3" value="" onkeypress='return event.charCode >= 48 && event.charCode <= 57'>
+                                                                    <span class="text-danger" asp-validation-for="@Model.Amount"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="row clearfix align-items-baseline justify-content-center">
+                                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-5">
+                                                            <label asp-for="@Model.ExpenseType" class="fw-bold" for="Description">Türü</label>
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-6 col-sm-12 col-xs-5">
+                                                            <div class="form-group">
+                                                                @Html.DropDownListFor(m => m.ExpenseType,
+                                                                Enum.GetValues(typeof(ExpenseType)).Cast<ExpenseType>()
+                                                                .Select(e => new SelectListItem()
+                                                                { Text = e.ToString()=="TransportationExpenses" ? "Taşıt Harcamaları" : e.ToString()=="FoodExpenses" ? "Yemek Harcamaları" : e.ToString()=="TravelExpenses" ? "Seyahat Harcamaları" : e.ToString()=="ClothingExpenses" ? "Giyim Harcamaları" : "İletişim Harcamaları", Value = ((int)e).ToString() }),
+                                                                "Harcama Talep Türü",
+                                                                new { @class = "form-select mb-3", id = "comboAdvancePayment" })
+                                                                <span class="text-danger" asp-validation-for="@Model.ExpenseType"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix align-items-baseline">
+                                                        <div class="file-field input-field d-flex justify-content-center">
+                                                            <div class="btn @(IsInManager ? "bg-blue-grey":"bg-pink") col-lg-2 col-md-2 col-sm-5 col-xs-5 ">
+                                                                <span>Dosya Seç</span>
+                                                                <input id="filePath" asp-for="@Model.ExpenseDocumentPath">
+                                                            </div>
+                                                            <div class="file-path-wrapper col-lg-8 col-md-6 col-sm-12 col-xs-5">
+                                                                <input id="file-input" class="file-path"
+                                                                       placeholder=" Dosyayı Seçiniz ( jpeg/pdf/png )">
+                                                                <div class="text-danger">
+                                                                    <span asp-validation-for="@Model.ExpenseDocumentPath" id="fileValid"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- button -->
+                                                    <div class="row clearfix">
+
+                                                        <div class="col-lg-12 p-t-20 text-center">
+                                                            <button class="btn @(IsInManager ? "bg-blue-grey":"bg-pink") waves-effect m-r-15">
+                                                                Harcama
+                                                                Talebi Oluştur
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- 2.prop -->
+                                        </div>
+                                        <!-- Bitiş -->
+                                    </div>
+                                </div>
+                            </div>
+                            @*Bitiş*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptsHRMPanel{
+    <script src="~/assets/js/pages/ui/dialogs.js"></script>
+    <script src="~/assets/js/bundles/sweetalert.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var fileInput = document.getElementById('file-input'); // dosya yükleme alanının HTML elemanını al
+        var filePath = document.getElementById('filePath'); // dosya yükleme alanının HTML elemanını al
+        var errorP = document.getElementById("fileValid");
+        fileInput.addEventListener('change', function () {
+            var file = fileInput.value;
+            var extension = file.split('.').pop().toLowerCase();
+            if (extension !== 'jpeg' && extension !== 'jpg' && extension !== 'png' && extension !== 'pdf') {
+                errorP.innerText = 'Sadece JPEG, PNG veya PDF uzantılı dosyalar kabul edilir.';
+                fileInput.value = null; // dosya alanını sıfırla
+                filePath.value = null; // dosya alanını sıfırla
+            }
+            else {
+                errorP.innerText = null;
+            }
+        });
+        let success = "@Success";
+        let error = "@Error"
+        if (success)
+            messageSuccessShow(success)
+        else if (error)
+            messageErrorShow(error)
+    </script>
+}

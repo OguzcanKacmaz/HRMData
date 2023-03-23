@@ -1,0 +1,207 @@
+﻿@model AddCompanyViewModel
+@{
+    ViewData["Title"] = "Şirket Ekle";
+    string Success = (string)TempData["Success"]!;
+    string Error = (string)TempData["Error"]!;
+    var IsInManager = User.IsInRole("Manager");
+    var IsInAdmin = User.IsInRole("Admin");
+}
+@section HeadHRMPanel{
+    <link href="../../assets/css/form.min.css" rel="stylesheet">
+
+}
+
+<div class="row clearfix justify-content-center ms-4 me-1">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="card">
+            <div class="header bg-admin rounded-top">
+                <h2>Şirket Ekle</h2>
+            </div>
+            <div class="body">
+                @if (TempData["SuccessMessage"] != null)
+                {
+                    <div class=" text-center alert alert-success" role="alert">
+                        @TempData["SuccessMessage"]
+                    </div>
+                }
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger text-center"></div>
+                <form asp-controller="Admin" asp-action="AddCompany" asp-area="HRMPanel" class="dropzone" enctype="multipart/form-data">
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label class="fw-bolder mb-3" asp-for="@Model.Name">Şirket İsmi</label>
+                                    <input asp-for="@Model.Name" id="FirstName" type="text" class="form-control" />
+                                    <span class="text-danger" asp-validation-for="@Model.Name"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label class="fw-bolder mb-3" asp-for="@Model.TaxNumber">Vergi Numarası</label>
+                                    <input asp-for="@Model.TaxNumber" id="LastName" type="text" class="form-control" />
+                                    <span class="text-danger" asp-validation-for="@Model.TaxNumber"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label class="fw-bolder mb-3" asp-for="@Model.TaxAdministration">Vergi Dairesi</label>
+                                    <input asp-for="@Model.TaxAdministration" id="SecondLastName" type="text" class="form-control" />
+                                    <span class="text-danger" asp-validation-for="@Model.TaxAdministration"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label class="fw-bolder mb-3" asp-for="@Model.MersisNo">Mersis No</label>
+                                    <input asp-for="@Model.MersisNo" id="MiddleName" type="text" class="form-control" />
+                                    <span class="text-danger" asp-validation-for="@Model.MersisNo"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-sm-6 pe-0">
+                            <div class="form-group mb-0">
+                                <div class="form-line">
+                                    <label class="fw-bolder mb-3" asp-for="@Model.FoundationYear">Kuruluş Yılı</label>
+                                    <input asp-for="@Model.FoundationYear" type="number" class="form-control" max="@DateTime.Now.Year" title="Şirket Kuruluş Yılı @DateTime.Now.Year Yılından Küçük Veya Eşit Olmalıdır" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                                    <span class="text-danger" asp-validation-for="@Model.FoundationYear"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label class="fw-bolder mb-3" asp-for="@Model.PhoneNumber">Telefon</label>
+                                    <input asp-for="@Model.PhoneNumber" type="text" class="form-control" />
+                                    <span class="text-danger" asp-validation-for="@Model.PhoneNumber"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-sm-6 pe-0">
+                            <div class="form-group mb-0">
+                                <div class="form-line">
+                                    <label class="fw-bolder mb-3" asp-for="@Model.Email">Email</label>
+                                    <input asp-for="@Model.Email" type="text" class="form-control" />
+                                    <span class="text-danger" asp-validation-for="@Model.Email"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 pe-0">
+                            <div class="form-group mb-0">
+                                <div class="form-line">
+                                    <label class="fw-bolder mb-3" asp-for="@Model.EmployeeCount">Çalışan Sayısı</label>
+                                    <input asp-for="@Model.EmployeeCount" type="number" class="form-control" onkeypress='return event.charCode >= 48 && event.charCode <= 57' />
+                                    <span class="text-danger" asp-validation-for="@Model.EmployeeCount"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row clearfix">
+                        <div class="col-sm-6 pe-0 mt-4 mb-3">
+                            <div class="form-group mb-0">
+                                <div class="form-line">
+                                    <label class="fw-bolder mb-4" asp-for="@Model.ContractStartDate">Sözleşme Başlangıç Tarihi</label>
+                                    <input asp-for="@Model.ContractStartDate" type="date" class="form-control" />
+                                    <span class="text-danger" asp-validation-for="@Model.ContractStartDate"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6 pe-0 mt-4 mb-3">
+                            <div class="form-group mb-0">
+                                <div class="form-line">
+                                    <label class="fw-bolder mb-4" asp-for="@Model.ContractEndDate">Sözleşme Bitiş Tarihi</label>
+                                    <input asp-for="@Model.ContractEndDate" type="date" class="form-control" />
+                                    <span class="text-danger" asp-validation-for="@Model.ContractEndDate"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row clearfix">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label class="fw-bolder mb-3" asp-for="@Model.CompanyTitle">Ünvan</label>
+                                    <div class="col-sm-12 mb-0 pe-0">
+                                        <select id="placeOfBirthSelect" asp-for="@Model.CompanyTitle" class="fs-2">
+                                            <option value="@CompanyTitle.None">Şirket Ünvanını Seçin..</option>
+                                            @foreach (var item in Enum.GetValues(typeof(CompanyTitle)))
+                                            {
+                                                if ((int)item != 0)
+                                                {
+                                                    <option value="@item.ToString()">@item.ToString()</option>
+                                                }
+
+                                            }
+                                        </select>
+                                        <span class="text-danger" asp-validation-for="@Model.CompanyTitle"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mt-2">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label class="fw-bolder mb-2" asp-for="@Model.Address">Adres</label>
+                                    <textarea asp-for="@Model.Address" rows="4" class="form-control no-resize"></textarea>
+                                    <span class="text-danger" asp-validation-for="@Model.Address"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row clearfix align-items-baseline">
+                        <div class="col-sm-12">
+                            <div class="file-field input-field">
+                                <div class="btn @(IsInManager ? "bg-blue-grey": IsInAdmin ? "bg-admin": "card-bg-header")">
+                                    <span>Dosya Seç</span>
+                                    <input id="filePath" asp-for="@Model.LogoPath">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input id="file-input" class="file-path"
+                                           placeholder="Yüklemek İstediğini Fotoğrafı Seçiniz (jpeg/png)">
+                                    <div class="text-danger">
+                                        <span class="text-danger" asp-validation-for="@Model.LogoPath"></span>
+                                        <span id="fileValid"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 p-t-20 text-center">
+                        <button class="btn bg-admin waves-effect m-r-15">Şirket Ekle</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptsHRMPanel{
+
+    <script src="../../assets/js/bundles/flatpickr.min.js"></script>
+    <!-- Custom Js -->
+    <script src="../../assets/js/pages/forms/flatpicker-data.js"></script>
+    <script src="../../assets/js/pages/forms/selectitem-data.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        let success = "@Success";
+        let error = "@Error"
+        if (success)
+            messageSuccessShow(success)
+        else if (error)
+            messageErrorShow(error)
+    </script>
+                 }

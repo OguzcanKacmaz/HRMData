@@ -1,0 +1,276 @@
+﻿/*
+ *  Document   : _general.scss
+ *  Author     : RedStar Template
+ *  Description: This scss file for all common style classes
+ */
+
+/* roboto-regular - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: url("~/assets/fonts/Roboto/roboto-v27-latin-regular.eot"); /* IE9 Compat Modes */
+  src: local(""),
+    url("~/assets/fonts/Roboto/roboto-v27-latin-regular.eot?#iefix")
+      format("embedded-opentype"),
+    /* IE6-IE8 */ url("~/assets/fonts/Roboto/roboto-v27-latin-regular.woff2")
+      format("woff2"),
+    /* Super Modern Browsers */
+      url("~/assets/fonts/Roboto/roboto-v27-latin-regular.woff") format("woff"),
+    /* Modern Browsers */ url("~/assets/fonts/Roboto/roboto-v27-latin-regular.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */
+      url("~/assets/fonts/Roboto/roboto-v27-latin-regular.svg#Roboto") format("svg"); /* Legacy iOS */
+}
+/* roboto-500 - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  src: url("~/assets/fonts/Roboto/roboto-v27-latin-500.eot"); /* IE9 Compat Modes */
+  src: local(""),
+    url("~/assets/fonts/Roboto/roboto-v27-latin-500.eot?#iefix")
+      format("embedded-opentype"),
+    /* IE6-IE8 */ url("~/assets/fonts/Roboto/roboto-v27-latin-500.woff2")
+      format("woff2"),
+    /* Super Modern Browsers */ url("~/assets/fonts/Roboto/roboto-v27-latin-500.woff")
+      format("woff"),
+    /* Modern Browsers */ url("~/assets/fonts/Roboto/roboto-v27-latin-500.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */
+      url("~/assets/fonts/Roboto/roboto-v27-latin-500.svg#Roboto") format("svg"); /* Legacy iOS */
+}
+/* roboto-700 - latin */
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 700;
+  src: url("~/assets/fonts/Roboto/roboto-v27-latin-700.eot"); /* IE9 Compat Modes */
+  src: local(""),
+    url("~/assets/fonts/Roboto/roboto-v27-latin-700.eot?#iefix")
+      format("embedded-opentype"),
+    /* IE6-IE8 */ url("~/assets/fonts/Roboto/roboto-v27-latin-700.woff2")
+      format("woff2"),
+    /* Super Modern Browsers */ url("~/assets/fonts/Roboto/roboto-v27-latin-700.woff")
+      format("woff"),
+    /* Modern Browsers */ url("~/assets/fonts/Roboto/roboto-v27-latin-700.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */
+      url("~/assets/fonts/Roboto/roboto-v27-latin-700.svg#Roboto") format("svg"); /* Legacy iOS */
+}
+body,
+html {
+  background-color: #f1f2f7;
+  @include transition(all 0.5s);
+  font-family: "Roboto";
+  font-weight: 400;
+  font-style: normal;
+  font-size: 13px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+}
+
+button,
+input,
+select,
+a {
+  outline: none !important;
+  text-decoration: none;
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+img {
+  max-width: 100%;
+}
+.row {
+  margin-bottom: 0px !important;
+}
+
+.no-animate {
+  -o-transition-property: none !important;
+  -moz-transition-property: none !important;
+  -ms-transition-property: none !important;
+  -webkit-transition-property: none !important;
+  transition-property: none !important;
+  -o-transform: none !important;
+  -moz-transform: none !important;
+  -ms-transform: none !important;
+  -webkit-transform: none !important;
+  transform: none !important;
+  -webkit-animation: none !important;
+  -moz-animation: none !important;
+  -o-animation: none !important;
+  -ms-animation: none !important;
+  animation: none !important;
+}
+
+section {
+  &.content {
+    margin: 90px 15px 0 276px;
+    @include transition(0.5s);
+  }
+}
+.horizontal-layout {
+  section {
+    &.content {
+      margin: 170px 15px 0 15px;
+      float: left;
+      width: calc(100% - 30px);
+    }
+  }
+}
+.pull-left {
+  float: left !important;
+}
+.pull-right {
+  float: right !important;
+}
+.jqvmap-zoomin,
+.jqvmap-zoomout {
+  width: 15px;
+  height: 15px;
+}
+table {
+  .checkbox {
+    [type="checkbox"] + label {
+      margin: 0;
+      height: 20px;
+      padding-left: 20px;
+      vertical-align: middle;
+    }
+  }
+}
+.loading-img-spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  margin: -60px 0 20px -20px;
+  -webkit-animation: spin 1.5s linear infinite;
+  -moz-animation: spin 1.5s linear infinite;
+  animation: spin 1.5s linear infinite;
+}
+.shadow-style {
+  -webkit-box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+.review-img {
+  padding-left: 20px;
+  padding-top: 5px;
+  width: 70px;
+  img {
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);
+  }
+}
+.horizontal-layout {
+  .sidebar,
+  .nav-left-menu {
+    display: none;
+  }
+}
+.bootstrap-notify-container {
+  max-width: 320px;
+  text-align: center;
+}
+.map iframe {
+  width: 100%;
+}
+.jqvmap-label {
+  position: absolute;
+  display: none;
+  -webkit-border-radius: 30px;
+  -moz-border-radius: 30px;
+  border-radius: 30px;
+  background: #eee;
+  color: black;
+  font-size: 14px;
+  font-family: sans-serif, Verdana;
+  padding: 10px;
+  pointer-events: none;
+}
+.logo-white {
+  .navbar-toggle,
+  .bars:before,
+  .bars:after {
+    color: #000 !important;
+  }
+}
+.logo-black {
+  .navbar-toggle,
+  .bars:before,
+  .bars:after {
+    color: #fff !important;
+  }
+}
+.dark {
+  .sidemenu-collapse i {
+    color: #fff;
+  }
+  .nav {
+    > li {
+      > a {
+        color: #fff;
+      }
+    }
+  }
+}
+.light {
+  .sidemenu-collapse i {
+    color: #0d091d;
+  }
+  .nav {
+    > li {
+      > a {
+        color: #0d091d;
+      }
+    }
+  }
+}
+.border-apply {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+}
+@media screen and(max-width: 1169px) {
+  .horizontal-layout {
+    .sidebar {
+      display: block;
+    }
+    .top-sidebar {
+      display: none;
+    }
+    section.content {
+      margin-top: 100px;
+    }
+  }
+}
+.font-icon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  transition: all 0.2s;
+  .icon-preview {
+    font-size: 1.8rem;
+    margin-right: 10px;
+    line-height: 1;
+    color: #333439;
+  }
+}
+@media screen and(min-width: 1400px) {
+  .boxed-layout .container {
+    width: 1370px;
+    max-width: 100%;
+  }
+}

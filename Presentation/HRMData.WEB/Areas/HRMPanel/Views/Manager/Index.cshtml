@@ -1,0 +1,281 @@
+﻿@model List<EmployeeViewModel>
+
+@{
+    ViewData["Title"] = "Personel İşlemleri";
+    string Success = (string)TempData["Success"]!;
+    string Error = (string)TempData["Error"]!;
+    var IsInManager = User.IsInRole("Manager");
+}
+
+@section HeadHRMPanel{
+    <link href="~/assets/css/bundles/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/assets/css/bundles/sweetalert.css" rel="stylesheet">
+}
+
+<div class="row ms-4">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="header bg-blue-grey rounded-top">
+                <h2>Tüm Personeller</h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-hover js-basic-example contact_list">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center"> TC Kimlik No  </th>
+                                <th class="text-center"> Adı Soyadı</th>
+                                <th class="text-center"> Meslek </th>
+                                <th class="text-center"> Departman </th>
+                                <th class="text-center"> İşe Giriş Tarihi</th>
+                                <th class="text-center"> Aksiyon </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var employee in Model)
+                            {
+                                var guid = Guid.NewGuid().ToString();
+                                <tr class="odd gradeX">
+                                    <td class="table-img center">
+                                        <img src="~/img/@employee.PhotoMini" alt="">
+                                    </td>
+                                    <td class="text-center">@employee.TcIdentificationNumber</td>
+                                    <td class="text-center">@employee.FullName</td>
+                                    <td class="text-center">@employee.TitleName</td>
+                                    <td class="text-center">@employee.DepartmentName</td>
+                                    <td class="text-center">@employee.DateTimeFormat(employee.HireDate)</td>
+                                    <td class="text-center">
+                                        <!-- Button trigger modal -->
+                                        <div>
+                                            <a title="Detay" class="btn bg-transparent waves-effect shadow-none" data-bs-toggle="modal" data-bs-target="#staticBackdrop_@guid">
+                                                <i class="fas fa-info-circle fa-2x blue-text"></i>
+                                            </a>
+                                            @*<a id="btnCancel" class="btn bg-transparent waves-effect shadow-none" asp-controller="Expense" asp-action="CancelExpense" asp-route-id="@expense.Id" title="İptal">
+                                        <i class="fas fa-ban fa-2x red-text"></i>
+                                        </a>*@
+                                        </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade " id="staticBackdrop_@guid" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content p-0 rounded-3 ">
+                                                    <div class="header card-bg-header d-flex justify-content-between align-items-baseline">
+                                                        <h2 class="white-text">
+                                                            Personel Detayları
+                                                        </h2>
+                                                        <button class="btn bg-transparent shadow-none" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                                            <i class="material-icons text-white">close</i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="body py-0">
+                                                        @*<div class="card body my-0 p-0">
+                                                    <div class="row">
+                                                    <div class="contact-photo">
+                                                    <img src="~/img/@employee.Photo" class="img-responsive" alt="">
+                                                    </div>
+                                                    </div>
+                                                    <div class="contact-usertitle">
+                                                    <div class="contact-usertitle-name">@employee.FullName </div>
+                                                    <div class="contact-usertitle-job">
+                                                    @employee.TitleName
+                                                    </div>
+                                                    </div>*@
+                                                        <div class="row clearfix">
+                                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-0">
+                                                                <div class="card profile-header">
+                                                                    <div class="body">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-4 col-md-4 col-12">
+                                                                                <div class="profile-image float-md-right">
+                                                                                    <img src="~/img/@employee.Photo" alt="" width="150px">
+                                                                                </div>
+                                                                                <div class="mt-3">
+                                                                                    <a href="mailto:@employee.Email" 
+                                                                                        class="btn btn-outline-info btn-border-radius">
+                                                                                        Mail Gönder
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-lg-8 col-md-8 col-12">
+                                                                                <h4 class="m-t-0 mb-3">@employee.FullName</h4>
+                                                                                <p class="job_post font-15">@employee.TitleName</p>
+                                                                                <p class="font-13">@employee.Address</p>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="body py-0">
+                                                            <div class="row">
+                                                                <div class="col-md-6 col-6 b-r text-start">
+                                                                    <strong>Tc Kimlik No</strong>
+                                                                    <br>
+                                                                    <p>@employee.TcIdentificationNumber</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-end">
+                                                                    <strong>Telefon </strong>
+                                                                    <br>
+                                                                    <p>@employee.PhoneNumberFormat(employee.PhoneNumber!)</p>
+                                                                </div>
+                                                               @* <div class="col-md-6 col-6 b-r text-start">
+                                                                    <strong>Meslek</strong>
+                                                                    <br>
+                                                                    <p>@employee.TitleName</p>
+                                                                </div>*@
+                                                                <div class="col-md-6 col-6 b-r text-start">
+                                                                    <strong>Doğum Tarihi</strong>
+                                                                    <br>
+                                                                    <p>@employee.DateTimeFormat(employee.DateOfBirth)</p>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-6 b-r text-end">
+                                                                    <strong>Doğum Yeri</strong>
+                                                                    <br>
+                                                                    <p>@employee.PlaceOfBirth</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-start">
+                                                                    <strong>Departman</strong>
+                                                                    <br>
+                                                                    <p>@employee.DepartmentName</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-end">
+                                                                    <strong>Şirket</strong>
+                                                                    <br>
+                                                                    <p>@employee.CompanyName</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-start">
+                                                                    <strong>Cinsiyet</strong>
+                                                                    <br>
+                                                                    <p>@(employee.Gender == Gender.Male ? "Erkek" : "Kadın")</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-end">
+                                                                    <strong>Maaş</strong>
+                                                                    <br>
+                                                                    <p>@employee.Salary</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-start">
+                                                                    <strong>işe Giriş Tarihi</strong>
+                                                                    <br>
+                                                                    <p>@employee.DateTimeFormat(employee.HireDate)</p>
+                                                                </div>
+
+                                                                @if (employee.TerminationDate != null)
+                                                                {
+                                                                    <div class="col-md-6 col-6 b-r text-end">
+                                                                        <strong>İşten Çıkış Tarihi</strong>
+                                                                        <br>
+                                                                        <p>
+                                                                            @employee.DateTimeFormat(employee.TerminationDate)
+                                                                        </p>
+                                                                    </div>
+                                                                }
+                                                                <div class="col-md-6 col-6 b-r @(employee.TerminationDate==null ? "text-end" : "text-start")">
+                                                                    <strong>Durum</strong>
+                                                                    <br>
+                                                                    <p>@(employee.IsActive == HRMData.Domain.Entities.Enums.Status.Active ? "Aktif" : "Pasif")</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        @* <ul class="list-group list-group-unbordered">
+                                                    <li class="list-group-item">
+                                                    <b>Kişisel Bilgiler</b>
+                                                    <hr />
+                                                    </li>
+
+                                                    <li class="list-group-item d-flex flex-column">
+                                                    TC Kimlik No
+                                                    <a class="">@employee.TcIdentificationNumber</a>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    Telefon
+                                                    <a class="float-end">@employee.PhoneNumberFormat(employee.PhoneNumber!)</a>
+                                                    </li>
+
+                                                    <li class="list-group-item">
+                                                    Meslek
+                                                    <a class="float-end">@employee.TitleName</a>
+                                                    </li>
+
+                                                    <li class="list-group-item">
+                                                    İşe Giriş Tarihi
+                                                    <a class="float-end">@employee.DateTimeFormat(employee.HireDate)</a>
+                                                    </li>
+                                                    @if (employee.TerminationDate != null)
+                                                    {
+                                                    <li class="list-group-item">
+                                                    İşten Çıkış Tarihi
+                                                    <a class="float-end">@employee.DateTimeFormat(employee.TerminationDate)</a>
+                                                    </li>
+                                                    }
+                                                    <li class="list-group-item">
+                                                    Doğum Yeri
+                                                    <a class="float-end">@employee.PlaceOfBirth</a>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    Doğum Tarihi
+                                                    <a class="float-end">@employee.DateTimeFormat(employee.DateOfBirth)</a>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    Cinsiyet
+                                                    <a class="float-end">@(employee.Gender == Gender.Male ? "Erkek" : "Kadın")</a>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    Şirket
+                                                    <a class="float-end">@employee.CompanyName</a>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    Departman
+                                                    <a class="float-end">@employee.DepartmentName</a>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    Aktiflik Durumu
+                                                    <a class="float-end">@(employee.IsActive == HRMData.Domain.Entities.Enums.Status.Active ? "Aktif" : "Pasif")</a>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                    Adres
+                                                    <a class="float-end">@employee.Address</a>
+                                                    </li>
+                                                    </ul>
+                                                    </div>*@
+                                                    </div>
+                                                    <div class="modal-footer mb-4">
+                                                        <button class="btn btn-secondary me-4 @(IsInManager ? "bg-blue-grey":"bg-pink")" data-bs-dismiss="modal">Kapat</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptsHRMPanel{
+    <script src="~/assets/js/table.min.js"></script>
+    <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
+    <script src="~/assets/js/pages/ui/dialogs.js"></script>
+    <script src="~/assets/js/bundles/sweetalert.min.js"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        let success = "@Success";
+        let error = "@Error"
+        if (success)
+            messageSuccessShow(success)
+        else if (error)
+            messageErrorShow(error)
+    </script>
+
+
+}

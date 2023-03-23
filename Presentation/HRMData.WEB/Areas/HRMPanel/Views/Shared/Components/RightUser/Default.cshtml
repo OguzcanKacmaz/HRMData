@@ -1,0 +1,42 @@
+﻿@model EmployeeViewModel
+
+<li class="dropdown user_profile me-3">
+    <div class="dropdown-toggle" data-bs-toggle="dropdown">
+        <img src="~/img/@Model.PhotoMini" class="user-img-style-right" alt="user">
+    </div>
+    <ul class="dropdown-menu pullDown">
+        <li class="body">
+            <ul class="user_dw_menu">
+                <li>
+                    <a asp-area="HRMPanel" asp-controller="Profile" asp-action="Index">
+                        <i class="material-icons">person</i>Profil
+                    </a>
+                </li>
+                <li>
+                    <a id="btnLock" asp-area="" asp-controller="Employee" asp-action="Locked">
+                        <i class="material-icons">lock</i>Kilitle
+                    </a>
+                </li>
+                <li>
+                    <a asp-area="" asp-route-returnurl="/Home/SignIn" asp-controller="Employee" asp-action="Logout">
+                        <i class="material-icons">power_settings_new</i>Çıkış Yap
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</li>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
+<script>
+    $(document).ready(function () {
+                $(document).on('keydown', function (event) {
+                    if (event.ctrlKey && event.keyCode == 76) {
+                        event.preventDefault();
+                        window.location.href = $('#btnLock').attr('href');
+                    }
+                });
+            });
+</script>
+

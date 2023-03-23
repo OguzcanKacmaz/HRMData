@@ -1,0 +1,300 @@
+﻿@model (EmployeeViewModel ViewEmployee, EditEmployeeViewModel EditEmployee)
+  
+@{
+    ViewData["Title"] = "Profil";
+    string Success = (string)TempData["Success"]!;
+    string Error = (string)TempData["Error"]!;
+    var IsInManager = User.IsInRole("Manager");   
+    var IsInAdmin = User.IsInRole("Admin");   
+}
+
+
+@*Sayfa Navigasyonu*@
+@*<div class="block-header">
+    <div class="row ms-auto">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <ul class="d-flex justify-content-end">
+                <li>
+                    <a class="fs-5 fw-normal text-dark " asp-area="HRMPanel" asp-action="Index" asp-controller="Dashboard">
+                        AnaSayfa <strong> / </strong>
+                    </a>
+                </li>
+                <li class="text-muted fs-5 ms-1"> Profil</li>
+            </ul>
+        </div>
+    </div>
+</div>*@
+@*Sayfa Navigasyon Bitiş*@
+<div class="row clearfix justify-content-center">
+    <div class="col-lg-10 col-md-12">
+        <div class="card">
+            <div class="contact-grid">
+                <div class="profile-header @(IsInAdmin ? "bg-admin" : "card-bg-header") rounded-top rounded-circle">
+                </div>
+                <img src="~/img/@Model.ViewEmployee.Photo" class="user-img" alt="">
+                <div class="mb-4">
+                    <div class="user-name">@Model.ViewEmployee.FullName</div>
+                    <div class="name-center">@Model.ViewEmployee.TitleName</div>
+                </div>
+                <div class="row">
+                    <div>
+                        <div class="@(IsInManager ? "bg-blue-grey": IsInAdmin ? "bg-admin": "card-bg-header") p-3">
+                            <div class="p-l-20">
+                                <ul class="nav d-flex justify-content-evenly">
+                                    <li class="nav-item tab-all">
+                                        <a class="nav-link active show" href="#summaryInfo"
+                                           data-bs-toggle="tab">
+                                            Özet Bilgi
+                                        </a>
+                                    </li>
+                                    <li class="nav-item tab-all">
+                                        <a class="nav-link" href="#detailInfo"
+                                           data-bs-toggle="tab">
+                                            Detay Bilgi
+                                        </a>
+                                    </li>
+                                    <li class="nav-item tab-all ">
+                                        <a class="nav-link" href="#userSettings"
+                                           data-bs-toggle="tab">
+                                            Bilgileri Güncelle
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-10 col-md-12">
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="summaryInfo" aria-expanded="true">
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="card project_widget">
+                            <div class="header @(IsInManager ? "bg-blue-grey": IsInAdmin ? "bg-admin": "bg-pink")">
+                                <h2>Özet Bilgi</h2>
+                            </div>
+                            <div class="body px-5 pt-5 pb-0">
+                                <div class="row">
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>İsim Soyisim</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.FullName</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Email Adresi </strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.Email</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Telefon Numarası</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.PhoneNumberFormat(Model.ViewEmployee.PhoneNumber!)</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Adres</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.Address</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Meslek</strong>
+                                        <br>
+                                        <p>
+                                            @Model.ViewEmployee.TitleName
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Departman</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.DepartmentName</p>
+                                    </div>
+                                </div>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="detailInfo" aria-expanded="false">
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="card project_widget">
+                            <div class="header @(IsInManager ? "bg-blue-grey": IsInAdmin ? "bg-admin": "bg-pink")">
+                                <h2>Detay Bilgi</h2>
+                            </div>
+                            <div class="body px-5 pt-5 pb-0">
+                                <div class="row">
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>TC Kimlik No</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.TcIdentificationNumber</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Email Adresi</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.Email</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>İsim</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.FirstName</p>
+                                    </div>
+                                    @if (@Model.ViewEmployee.MiddleName != null)
+                                    {
+                                        <div class="col-md-6 col-6 b-r">
+                                            <strong>İkinci İsim</strong>
+                                            <br>
+                                            <p>@Model.ViewEmployee.MiddleName</p>
+                                        </div>
+                                    }
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Soyisim</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.LastName</p>
+                                    </div>
+                                    @if (@Model.ViewEmployee.SecondLastName != null)
+                                    {
+                                        <div class="col-md-6 col-6 b-r">
+                                            <strong>İkinci Soyisim</strong>
+                                            <br>
+                                            <p>@Model.ViewEmployee.SecondLastName</p>
+                                        </div>
+                                    }
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Doğum Tarihi</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.DateTimeFormat(Model.ViewEmployee.DateOfBirth)</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Doğum Yeri</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.PlaceOfBirth</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>İşe Giriş Tarihi</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.DateTimeFormat(Model.ViewEmployee.HireDate)</p>
+                                    </div>
+                                    @if (Model.ViewEmployee.TerminationDate != null)
+                                    {
+                                        <div class="col-md-6 col-6 b-r">
+                                            <strong>İşten Çıkış Tarihi</strong>
+                                            <br>
+                                            <p>@Model.ViewEmployee.DateTimeFormat(Model.ViewEmployee.TerminationDate)</p>
+                                        </div>
+                                    }
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Aktiflik Durumu</strong>
+                                        <br>
+                                        <p>@(Model.ViewEmployee.IsActive == HRMData.Domain.Entities.Enums.Status.Active ? "Aktif" : "Pasif")</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Meslek</strong>
+                                        <br>
+                                        <p> @Model.ViewEmployee.TitleName</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Adres</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.Address</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Telefon</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.PhoneNumberFormat(Model.ViewEmployee.PhoneNumber!)</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Departman</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.DepartmentName</p>
+                                    </div>
+                                    <div class="col-md-6 col-6 b-r">
+                                        <strong>Şirket</strong>
+                                        <br>
+                                        <p>@Model.ViewEmployee.CompanyName</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="userSettings" aria-expanded="false">
+                <div class="card ">
+                    <div class="header @(IsInManager ? "bg-blue-grey": IsInAdmin ? "bg-admin": "bg-pink")">
+                        <h2>
+                            Bilgileri Güncelle
+                        </h2>
+                    </div>
+                    <form class="px-4" asp-area="HRMPanel" asp-controller="Profile" asp-action="UpdateEmployee" enctype="multipart/form-data">
+                        <div class="body  p-4">
+                            <input type="hidden" asp-for="EditEmployee.Id">
+                            <div class="form-group">
+                                <input asp-for="EditEmployee.PhoneNumber" class="form-control" placeholder="Telefon">
+                                <div class="text-danger">
+                                    <span asp-validation-for="EditEmployee.PhoneNumber"></span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input asp-for="EditEmployee.Address" class="form-control" placeholder="Adres">
+                                <div class="text-danger">
+                                    <span asp-validation-for="EditEmployee.Address"></span>
+                                </div>
+                            </div>
+                            <div class="row clearfix">
+                                <div class="file-field input-field">
+                                    <div class="btn @(IsInManager ? "bg-blue-grey": IsInAdmin ? "bg-admin": "bg-pink")">
+                                        <span>Dosya Seç</span>
+                                        <input id="filePath" asp-for="@Model.EditEmployee.PhotoPath">
+                                    </div>
+                                    <div class="file-path-wrapper">
+                                        <input id="file-input" class="file-path"
+                                               placeholder="Yüklemek İstediğini Fotoğrafı Seçiniz (jpeg/png)">
+                                        <div class="text-danger">
+                                            <span id="fileValid"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pb-4 px-4">
+                            <div>
+                                <button class="btn @(IsInManager ? "bg-blue-grey": IsInAdmin ? "bg-admin": "bg-pink") btn-round">Kaydet</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section ScriptsHRMPanel{
+
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        var fileInput = document.getElementById('file-input'); // dosya yükleme alanının HTML elemanını al
+        var filePath = document.getElementById('filePath'); // dosya yükleme alanının HTML elemanını al
+        var errorP = document.getElementById("fileValid");
+        fileInput.addEventListener('change', function () {
+            var file = fileInput.value;
+            var extension = file.split('.').pop().toLowerCase();
+            if (extension !== 'jpeg' && extension !== 'jpg' && extension !== 'png') {
+                errorP.innerText = 'Sadece JPEG ve PNG uzantılı dosyalar kabul edilir.';
+                this.value = null;
+                filePath.value = null;// dosya alanını sıfırla
+            }
+            else {
+                errorP.innerText = "";
+            }
+        });
+        let success = "@Success";
+        let error = "@Error"
+        if (success)
+            messageSuccessShow(success)
+        else if (error)
+            messageErrorShow(error)
+    </script>
+}

@@ -1,0 +1,88 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{111FD0E0-B32F-4601-AC91-DEBE4423FE0B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMData.Domain", "Core\HRMData.Domain\HRMData.Domain.csproj", "{5F09F3D7-6030-4921-ABC1-03C711E5A588}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMData.Application", "Core\HRMData.Application\HRMData.Application.csproj", "{733D72B4-7D8F-48CA-999D-6B2E4952BAEF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{092CDAD1-AD29-4E89-8126-A0E4E1AAA5F1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMData.Infrastructure", "Infrastructure\HRMData.Infrastructure\HRMData.Infrastructure.csproj", "{4C5FF525-5E04-4B9B-9050-086C48870020}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMData.Persistence", "Infrastructure\HRMData.Persistence\HRMData.Persistence.csproj", "{CA0C9795-F0CB-4D66-9EE1-3E85AC4DC12A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{64DED81B-4AFE-4240-96FC-0E457FF76596}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HRMData.WEB", "Presentation\HRMData.WEB\HRMData.WEB.csproj", "{C5480A51-1937-4513-919D-9AC120A8910B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5F09F3D7-6030-4921-ABC1-03C711E5A588}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F09F3D7-6030-4921-ABC1-03C711E5A588}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F09F3D7-6030-4921-ABC1-03C711E5A588}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F09F3D7-6030-4921-ABC1-03C711E5A588}.Release|Any CPU.Build.0 = Release|Any CPU
+		{733D72B4-7D8F-48CA-999D-6B2E4952BAEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{733D72B4-7D8F-48CA-999D-6B2E4952BAEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{733D72B4-7D8F-48CA-999D-6B2E4952BAEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{733D72B4-7D8F-48CA-999D-6B2E4952BAEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C5FF525-5E04-4B9B-9050-086C48870020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C5FF525-5E04-4B9B-9050-086C48870020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C5FF525-5E04-4B9B-9050-086C48870020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C5FF525-5E04-4B9B-9050-086C48870020}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA0C9795-F0CB-4D66-9EE1-3E85AC4DC12A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA0C9795-F0CB-4D66-9EE1-3E85AC4DC12A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA0C9795-F0CB-4D66-9EE1-3E85AC4DC12A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA0C9795-F0CB-4D66-9EE1-3E85AC4DC12A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5480A51-1937-4513-919D-9AC120A8910B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5480A51-1937-4513-919D-9AC120A8910B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5480A51-1937-4513-919D-9AC120A8910B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5480A51-1937-4513-919D-9AC120A8910B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5F09F3D7-6030-4921-ABC1-03C711E5A588} = {111FD0E0-B32F-4601-AC91-DEBE4423FE0B}
+		{733D72B4-7D8F-48CA-999D-6B2E4952BAEF} = {111FD0E0-B32F-4601-AC91-DEBE4423FE0B}
+		{4C5FF525-5E04-4B9B-9050-086C48870020} = {092CDAD1-AD29-4E89-8126-A0E4E1AAA5F1}
+		{CA0C9795-F0CB-4D66-9EE1-3E85AC4DC12A} = {092CDAD1-AD29-4E89-8126-A0E4E1AAA5F1}
+		{C5480A51-1937-4513-919D-9AC120A8910B} = {64DED81B-4AFE-4240-96FC-0E457FF76596}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5EA4FD18-20F1-4E84-BD8B-C59C87373B25}
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 6
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://dev.azure.com/oguzcankacmaz
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Core\\HRMData.Application\\HRMData.Application.csproj
+		SccProjectTopLevelParentUniqueName1 = HRMData.sln
+		SccProjectName1 = Core/HRMData.Application
+		SccLocalPath1 = Core\\HRMData.Application
+		SccProjectUniqueName2 = Core\\HRMData.Domain\\HRMData.Domain.csproj
+		SccProjectTopLevelParentUniqueName2 = HRMData.sln
+		SccProjectName2 = Core/HRMData.Domain
+		SccLocalPath2 = Core\\HRMData.Domain
+		SccProjectUniqueName3 = Infrastructure\\HRMData.Infrastructure\\HRMData.Infrastructure.csproj
+		SccProjectTopLevelParentUniqueName3 = HRMData.sln
+		SccProjectName3 = Infrastructure/HRMData.Infrastructure
+		SccLocalPath3 = Infrastructure\\HRMData.Infrastructure
+		SccProjectUniqueName4 = Infrastructure\\HRMData.Persistence\\HRMData.Persistence.csproj
+		SccProjectTopLevelParentUniqueName4 = HRMData.sln
+		SccProjectName4 = Infrastructure/HRMData.Persistence
+		SccLocalPath4 = Infrastructure\\HRMData.Persistence
+		SccProjectUniqueName5 = Presentation\\HRMData.WEB\\HRMData.WEB.csproj
+		SccProjectTopLevelParentUniqueName5 = HRMData.sln
+		SccProjectName5 = Presentation/HRMData.WEB
+		SccLocalPath5 = Presentation\\HRMData.WEB
+	EndGlobalSection
+EndGlobal

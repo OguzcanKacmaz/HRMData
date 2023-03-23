@@ -1,0 +1,40 @@
+﻿@*<!-- #END# Notifications-->
+@using HRMData.Domain.Entities;
+@model (List<RemovedRequest> listRequest, string id)
+<!-- #START# Notifications-->
+<li class="dropdown">
+    <a href="#" onclick="return false;" class="dropdown-toggle" data-bs-toggle="dropdown"
+       role="button">
+        <i class="far fa-bell"></i>
+        <span class="notify"></span>
+        <span class="heartbeat"></span>
+    </a>
+    <ul class="dropdown-menu pulldown ">
+        <li class="header">Bildirimler</li>
+        <li class="body">
+            <ul class="menu">
+                @if (Model.listRequest.Count != 0)
+                {
+                    @foreach (var item in Model.listRequest)
+                    {
+                        <li class="px-2">
+                            <span class="d-flex flex-column border-bottom px-1 ms-2">
+                            <span>@item.RequestType Talebiniz Zaman Aşımından İptal Edilmiştir. </span>
+                            <span class="align-self-end">@item.RemovedDate</span>
+                            </span>                           
+                        </li>
+                    }
+                }
+
+                @if (Model.listRequest.Count == 0)
+                {
+                    <li class="px-2 ms-2">                       
+                        <div class="text-center">Bildiriminiz Yoktur </div>                       
+                    </li>
+                }
+            </ul>           
+        </li>
+        <li class="footer"> <a asp-action="ClearNotifications" asp-controller="Profile" asp-route-id="@Model.id" asp-route-cs="@Context.Request.Scheme://@Context.Request.Host@Context.Request.Path" class="text-danger fs-6 text-center pe-0">Tüm Bildirimleri Temizle</a></li>
+    </ul>
+</li>
+<!-- #END# Notifications-->*@

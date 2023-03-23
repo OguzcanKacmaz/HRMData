@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>HRMData | HRMPanel</title>
+    <!-- Favicon-->
+    <link rel="icon" href="~/assets/images/favicon.ico" type="image/x-icon">
+    <!-- Plugins Core Css -->
+    <link href="~/assets/css/common.min.css" rel="stylesheet">
+    <!-- Custom Css -->
+    <link href="~/assets/css/style.css" rel="stylesheet" />
+    <!-- You can choose a theme from css/styles instead of get all themes -->
+    <link href="~/assets/css/styles/all-themes.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+    <link href="~/lib/sweetalert2/dist/sweetalert2.min.css" rel="stylesheet" />
+    @await RenderSectionAsync("HeadHRMPanel", required: false)
+</head>
+
+<body>
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Top Bar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="#" onClick="return false;" class="navbar-toggle collapsed" data-bs-toggle="collapse"
+                   data-bs-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="#" onClick="return false;" class="bars"></a>
+                <a class="navbar-brand" asp-area="HRMPanel" asp-action="Index" asp-controller="Dashboard">
+                    <img src="~/assets/images/logo.png" alt="" />
+                    <span class="logo-name">RMData</span>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="pull-left">
+                    <li>
+                        <a href="#" onClick="return false;" class="sidemenu-collapse">
+                            <i data-feather="menu"></i>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @*Notifications Başlangıç*@
+                    @*<vc:notifications/>*@
+                    @*Notifications Bitiş*@
+                    <vc:right-user />
+                    <!-- #END# Tasks -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <div>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- Menu -->
+            <vc:menu/>
+            <!-- #Menu -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+
+            @RenderBody()
+        </div>
+    </section>
+    <script src="~/assets/js/common.min.js"></script>
+    
+    <!-- Custom Js -->
+    <script src="~/assets/js/admin.js"></script>
+    <script src="~/js/site.js"></script>
+    <script src="~/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    
+    @await RenderSectionAsync("ScriptsHRMPanel", required: false)  
+
+</body>
+</html>

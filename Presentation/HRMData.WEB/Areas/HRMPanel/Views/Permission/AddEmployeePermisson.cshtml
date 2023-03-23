@@ -1,0 +1,445 @@
+﻿@model (PermissionRequestNumOfDaysViewModel ofDays, AddEmployeePermissionRequestViewModel vm)
+@{
+    ViewData["Title"] = "İzin Talep İşlemleri";
+    string Success = (string)TempData["Success"]!;
+    string Error = (string)TempData["Error"]!;
+    var IsInManager = User.IsInRole("Manager");
+}
+@section HeadHRMPanel{
+    <link href="~/assets/css/bundles/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/assets/css/bundles/sweetalert.css" rel="stylesheet">
+}
+
+@*Sayfa Navigasyonu*@
+@*<div class="block-header">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <ul class="breadcrumb breadcrumb-style ">
+                <li class="breadcrumb-item">
+                </li>
+                <li>
+                    <a asp-area="HRMPanel" asp-action="Index" asp-controller="Dashboard">AnaSayfa</a>
+                </li>
+                <li class="breadcrumb-item active">İşlemler</li>
+                <li class="breadcrumb-item active">Avans İşlemleri</li>
+                <li class="breadcrumb-item active">Avans Talebi Oluştur</li>
+            </ul>
+        </div>
+    </div>
+</div>*@
+@*Sayfa Navigasyon Bitiş*@
+
+<div class="row clearfix justify-content-center mt-5">
+    <div class="col-lg-10 col-md-12">
+        <div>
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="row justify-content-end align-items-center">
+                        <div class="col-xl-12 col-lg-6 col-6">
+                            <div class="card l-bg-purple h-50">
+                                <div class="info-box-5 p-4">
+                                    <div class="card-icon card-icon-large"><i class="far fa-window-restore"></i></div>
+                                    <div class="mb-4">
+                                        <h5 class="font-18 mb-0">Kalan Yıllık İzin Gün Sayısı</h5>
+                                    </div>
+                                    <div class="row align-items-center mb-2 d-flex">
+                                        <div class="col-8">
+                                            <h2 class="d-flex align-items-center mb-0">
+                                                @TempData["RemainingAnnualLeave"]
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-10 col-md-12 col-sm-12">
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active show" id="newexpense" aria-expanded="false">
+                <div class="row clearfix">
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <div class="card project_widget">
+                            <div class="header @(IsInManager ? "bg-blue-grey":"bg-pink") rounded-top mb-5">
+                                <h2>İzin Talebi Oluştur</h2>
+                            </div>
+                            <div class="body p-4 mt-4 d-flex justify-content-center align-items-center">
+                                @*Başlangıç*@
+                                <div class="col-lg-10 col-md-12 ">
+                                    <div class="tab-content">
+                                        <div role="tabpanel" class="tab-pane active" id="detail" aria-expanded="false">
+                                            <div class="row clearfix col-sm-12">
+                                                <!-- Başlangıç -->
+                                                <form id="PermissionFrm" class="form-horizontal" asp-action="AddEmployeePermisson" asp-controller="Permission" method="post" asp-area="HRMPanel" enctype="multipart/form-data">
+                                                    <!-- 1.prop -->
+                                                    <div class="row clearfix align-items-baseline justify-content-center">
+                                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-4 mt-4">
+                                                            <label asp-for="@Model.vm.PermissionType" class="fw-bold">İzin Türü</label>
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-6 col-sm-12 col-xs-4 mt-4">
+                                                            <div class="form-group">
+                                                                @if ((Gender)(TempData["Gender"]!) == Gender.Female)
+                                                                {
+
+                                                                    @Html.DropDownListFor(m => m.vm.PermissionType,
+                                                                new List<SelectListItem>()
+                                                                {
+                                                                new SelectListItem() { Text = "Mazeret İzni (Yılda 1 Kez)", Value = PermissionType.ExcusedAbsence.ToString(), Disabled = (Model.ofDays.ExcusedAbsenceDay == 0) },
+                                                                new SelectListItem() { Text = "Yıllık İzin", Value = PermissionType.AnnualLeave.ToString(),  Disabled = (double)(@TempData["RemainingAnnualLeave"]!) == 0},
+                                                                new SelectListItem() { Text = "Ücretsiz İzin", Value = PermissionType.UnpaidLeave.ToString() },
+                                                                new SelectListItem() { Text = "Doğum İzni (Doğum Öncesi 8 Hafta)", Value = PermissionType.AntenatalLeave.ToString() },
+                                                                new SelectListItem() { Text = "Doğum İzni (Doğum Sonrası 8 Hafta)", Value = PermissionType.PostnatalLeave.ToString() },
+                                                                new SelectListItem() { Text = "Vefat İzni (3 Gün)", Value = PermissionType.BereavementLeave.ToString() },
+                                                                new SelectListItem() { Text = "Evlilik İzni (7 Gün)", Value = PermissionType.MarriageLeave.ToString() },
+                                                                new SelectListItem() { Text = "Hastalık İzni", Value = PermissionType.SickLeave.ToString() }
+                                                                },
+                                                                new { @class = "form-select mb-3", id = "PermissionType" }
+                                                                )
+
+
+                                                                }
+                                                                else if ((Gender)(TempData["Gender"]!) == Gender.Male)
+                                                                {
+                                                                    @Html.DropDownListFor(m => m.vm.PermissionType,
+                                                                new List<SelectListItem>()
+                                                                {
+                                                                new SelectListItem() { Text = "Mazeret İzni (Yılda 1 Kez)", Value = PermissionType.ExcusedAbsence.ToString(),Disabled = (Model.ofDays.ExcusedAbsenceDay == 0) },
+                                                                new SelectListItem() { Text = "Yıllık İzin", Value = PermissionType.AnnualLeave.ToString() },
+                                                                new SelectListItem() { Text = "Ücretsiz İzin", Value = PermissionType.UnpaidLeave.ToString() },
+                                                                new SelectListItem() { Text = "Babalık İzni (5 Gün)", Value = PermissionType.PaternityLeave.ToString() },
+                                                                new SelectListItem() { Text = "Vefat İzni (3 Gün)", Value = PermissionType.BereavementLeave.ToString() },
+                                                                new SelectListItem() { Text = "Evlilik İzni (3 Gün)", Value = PermissionType.MarriageLeave.ToString() },
+                                                                new SelectListItem() { Text = "Hastalık İzni", Value = PermissionType.SickLeave.ToString() }
+                                                                },
+                                                                new { @class = "form-select mb-3", id = "PermissionType" })
+                                                                }
+
+                                                                <span class="text-danger " asp-validation-for="@Model.vm.PermissionType"></span>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row clearfix align-items-baseline justify-content-center">
+                                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-5 mb-4">
+                                                            <label class="fw-bold" asp-for="@Model.vm.StartDate">Başlangıç Tarihi</label>
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-6 col-sm-12 col-xs-5">
+                                                            <div class="form-group">
+                                                                <div class="form-line">
+                                                                    <input asp-for="@Model.vm.StartDate" type="date" id="StartDate" max="@DateTime.Now.AddYears(1).ToString("yyyy-MM-dd")" title="Lütfen @DateTime.Now.AddDays(1).ToString("dd-MM-yyyy") ve @DateTime.Now.AddYears(1).ToString("dd-MM-yyyy") tarihleri arasında bir tarih seçin">
+                                                                    <span class="text-danger" asp-validation-for="@Model.vm.StartDate"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix align-items-baseline justify-content-center">
+                                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-5 mb-4">
+                                                            <label asp-for="@Model.vm.EndDate" class="fw-bold">Bitiş Tarihi</label>
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-6 col-sm-12 col-xs-5">
+                                                            <div class="form-group">
+                                                                <input asp-for="@Model.vm.EndDate" type="date" id="EndDate" max="@DateTime.Now.AddYears(1).ToString("yyyy-MM-dd")">
+
+                                                                <span id="endDateValid" class="text-danger" asp-validation-for="@Model.vm.EndDate"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix align-items-baseline justify-content-center">
+                                                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-5 mb-5">
+                                                            <label asp-for="@Model.vm.NumOfDays" class="fw-bold">İzin Gün Sayısı</label>
+                                                        </div>
+                                                        <div class="col-lg-8 col-md-6 col-sm-12 col-xs-5">
+                                                            <div class="form-group">
+                                                                <input asp-for="@Model.vm.NumOfDays" type="number" id="NumOfDays">
+                                                                <span class="text-danger" asp-validation-for="@Model.vm.NumOfDays"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row clearfix align-items-baseline">
+                                                        <div class="file-field input-field d-flex justify-content-center">
+                                                            <div class="btn @(IsInManager ? "bg-blue-grey":"bg-pink") col-lg-2 col-md-2 col-sm-5 col-xs-5 mb-4">
+                                                                <span>Dosya Seç</span>
+                                                                <input id="filePath" asp-for="@Model.vm.DocumentPath">
+                                                            </div>
+                                                            <div class="file-path-wrapper col-lg-8 col-md-6 col-sm-12 col-xs-5">
+                                                                <input id="file-input" class="file-path"
+                                                                       placeholder=" Gerekli Belgenizi Yükleyiniz ( jpeg/pdf/png )">
+                                                                <div class="text-danger">
+                                                                    <span asp-validation-for="@Model.vm.DocumentPath" id="fileValid"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- button -->
+                                                    <div class="row clearfix">
+
+                                                        <div class="col-lg-12 p-t-20 text-center">
+                                                            <button id="PermissionBtn" class="btn @(IsInManager ? "bg-blue-grey":"bg-pink") waves-effect m-r-15">
+                                                                İzin
+                                                                Talebi Oluştur
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <!-- 2.prop -->
+                                        </div>
+                                        <!-- Bitiş -->
+                                    </div>
+                                </div>
+                            </div>
+                            @*Bitiş*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptsHRMPanel{
+    <script src="~/assets/js/pages/ui/dialogs.js"></script>
+    <script src="~/assets/js/bundles/sweetalert.min.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+       
+        const startDate = $("#StartDate");
+        const endDate = $("#EndDate");
+        const numOfDays = $("#NumOfDays");
+        numOfDays.val("");
+        startDate.val("");
+        endDate.val("");
+        endDate.prop("disabled", true);
+        startDate.prop("disabled", true);
+        startDate.change(function () {
+            endDate.prop("disabled", false);
+        });
+       
+        $("#PermissionBtn").click(function () {
+            var documentPath = $("#filePath").val();
+            if (documentPath.trim() === "") {
+                numOfDays.prop("disabled", false);
+                startDate.prop("disabled", false)
+                endDate.prop("disabled", false)
+                $("#PermissionFrm").submit();
+            }
+            else if (documentPath.trim() !== "" && ($("#PermissionType").val() == "AnnualLeave" || $("#PermissionType").val() == "UnpaidLeave" || $("#PermissionType").val() == "ExcusedAbsence")) {
+                numOfDays.prop("disabled", false);
+                $("#PermissionFrm").submit();
+            }
+            else{
+                numOfDays.prop("disabled", false);
+                startDate.prop("disabled", false)
+                endDate.prop("disabled", false)
+                $("#PermissionFrm").submit();
+            }
+        });
+        $(document).ready(function () {
+            var dropdownList = $("#PermissionType");
+            dropdownList.prepend("<option value='' selected>Seçim yapınız</option>");
+            dropdownList.change(function () {
+                if (dropdownList.val() === "") {
+                    startDate.val("");
+                    endDate.val("");
+                    numOfDays.val("");
+                    $("#EndDate").attr("title", "");
+                    startDate.prop("disabled", true);
+                    endDate.prop("disabled", true);
+                    numOfDays.prop("disabled", true);
+                } else {
+                    startDate.prop("disabled", false);
+                }
+            });
+        });
+        $("#StartDate").on("change", function () {
+            var startDate = new Date($(this).val());
+
+            var day = startDate.getDate();
+            startDate.setDate(day + 1);
+            var newDate = new Date(startDate);
+            var today = new Date();
+            var endDate = new Date(today.getFullYear() + 1, today.getMonth(), today.getDate());
+            var maxEndDate = endDate.toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" }); // Bitiş tarihini tarih formatına dönüştür
+
+            var startDateFormat = startDate.toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "numeric" }); // Başlangıç tarihini tarih formatına dönüştür
+            var titleText = "Lütfen " + startDateFormat + " ve " + maxEndDate + " tarihleri arasında bir tarih seçin";
+            $("#EndDate").attr("title", titleText);
+        })
+
+        const updateNumOfDays = function () {
+            const start = new Date(startDate.val());
+            const end = new Date(endDate.val());
+            const days = (Math.floor((end - start) / (1000 * 60 * 60 * 24)));
+            numOfDays.val(days);
+        };
+
+        const now = new Date();
+        const tomorrow = new Date(now.getTime() + (2 * 86400000) + (3 * 60 * 60 * 1000)).toISOString().split("T")[0];
+        const today = new Date(now.getTime() + 86400000 + (3 * 60 * 60 * 1000)).toISOString().split("T")[0];
+        endDate.attr("min", tomorrow);
+
+        startDate.attr("min", today);
+
+        startDate.on("change", function () {
+            const start = new Date(startDate.val());
+            const nextDay = new Date(start.getTime() + 86400000).toISOString().split("T")[0];
+            endDate.attr("min", nextDay);
+            //endDate.val(nextDay);
+            updateNumOfDays();
+        });
+
+        endDate.on("change", function () {
+            startDate.attr("min", today);
+            updateNumOfDays();
+        });
+
+        startDate.on("change", updateNumOfDays);
+        endDate.on("change", updateNumOfDays);
+
+        numOfDays.prop("disabled", true);
+
+
+        $("#StartDate").change(PermissionDays);
+        $("#PermissionType").change(PermissionDays);
+
+
+
+        //$("#PermissionBtn").click(function (event) {
+        //    event.preventDefault();
+        //    var EndDate = $("#EndDate");
+        //    var StartDate = $("#StartDate");
+        //    var NumOfDays = $("#NumOfDays");
+        //    var documentPath = $("#filePath").val();
+        //    var permissionType = $("#PermissionType").val();
+
+        //    if (documentPath.trim() === "" || permissionType.trim() === "") {
+        //        $("#PermissionFrm").submit();
+        //        if (!EndDate.val() == "" && !StartDate.val() == "" && !NumOfDays.val() == "" && $("#endDateValid").val() == "") {
+        //            NumOfDays.prop("disabled", true);
+        //            EndDate.prop("disabled", true);
+        //        }
+        //        else if (!EndDate.val() == "" && !StartDate.val() == "" && !NumOfDays.val() == "" && $("#endDateValid").val() != "") {
+        //            EndDate.prop("disabled", false);
+        //            NumOfDays.prop("disabled", true);
+        //        }
+
+        //    }
+        //    else {
+        //        NumOfDays.prop("disabled", false);
+        //        EndDate.prop("disabled", false);
+        //        $("#PermissionFrm").submit();
+        //        if (StartDate.val() == "" && $("#endDateValid").val() == "") {
+        //            NumOfDays.prop("disabled", true);
+        //        }
+        //    }
+        //});
+
+
+
+        var fileInput = document.getElementById('file-input');
+        var filePath = document.getElementById('filePath');
+        var errorP = document.getElementById("fileValid");
+        fileInput.addEventListener('change', function () {
+            var file = fileInput.value;
+            var extension = file.split('.').pop().toLowerCase();
+            if (extension !== 'jpeg' && extension !== 'jpg' && extension !== 'png' && extension !== 'pdf') {
+                errorP.innerText = 'Sadece JPEG, PNG veya PDF uzantılı dosyalar kabul edilir.';
+                fileInput.value = null;
+                filePath.value = null;
+            }
+            else {
+                errorP.innerText = null;
+            }
+        });
+        let success = "@Success";
+        let error = "@Error"
+        if (success)
+            messageSuccessShow(success)
+        else if (error)
+            messageErrorShow(error)
+
+        function PermissionDays() {
+            var days = @Html.Raw(Json.Serialize(Model.ofDays));
+            const jsonData = JSON.stringify(days);
+            const parsedData = JSON.parse(jsonData);
+            var permissionType = $("#PermissionType").val();
+            var startDate = new Date($("#StartDate").val());
+            var EndDate = $("#EndDate");
+            if (!startDate || isNaN(startDate.getTime())) {
+                return;
+            }
+
+            if (permissionType == "AntenatalLeave") {
+                var endDate = new Date(startDate.getTime() + (parsedData.antenatalLeaveDay * 24 * 60 * 60 * 1000));
+                EndDate.val(endDate.toISOString().substring(0, 10));
+                var NumOfDays = $("#NumOfDays");
+                NumOfDays.val(parsedData.antenatalLeaveDay);
+                NumOfDays.prop("disabled", true);
+                EndDate.prop("disabled", true);
+            }
+            else if (permissionType == "PostnatalLeave") {
+                var endDate = new Date(startDate.getTime() + (parsedData.postnatalLeaveDay * 24 * 60 * 60 * 1000));
+                EndDate.val(endDate.toISOString().substring(0, 10));
+                var NumOfDays = $("#NumOfDays");
+                NumOfDays.val(parsedData.postnatalLeaveDay);
+                NumOfDays.prop("disabled", true);
+                EndDate.prop("disabled", true);
+            }
+            else if (permissionType == "PaternityLeave") {
+                var endDate = new Date(startDate.getTime() + (parsedData.paternityLeaveDay * 24 * 60 * 60 * 1000));
+                EndDate.val(endDate.toISOString().substring(0, 10));
+                var NumOfDays = $("#NumOfDays");
+                NumOfDays.val(parsedData.paternityLeaveDay);
+                NumOfDays.prop("disabled", true);
+                EndDate.prop("disabled", true);
+            }
+            else if (permissionType == "BereavementLeave") {
+                var endDate = new Date(startDate.getTime() + (parsedData.bereavementLeaveDay * 24 * 60 * 60 * 1000));
+                EndDate.val(endDate.toISOString().substring(0, 10));
+                var NumOfDays = $("#NumOfDays");
+                NumOfDays.val(parsedData.bereavementLeaveDay);
+                NumOfDays.prop("disabled", true);
+                EndDate.prop("disabled", true);
+            }
+            else if (permissionType == "MarriageLeave") {
+                var endDate = new Date(startDate.getTime() + (parsedData.marriageLeaveDay * 24 * 60 * 60 * 1000));
+                EndDate.val(endDate.toISOString().substring(0, 10));
+                var NumOfDays = $("#NumOfDays");
+                NumOfDays.val(parsedData.marriageLeaveDay);
+                NumOfDays.prop("disabled", true);
+                EndDate.prop("disabled", true);
+            }
+            else if (permissionType == "ExcusedAbsence") {
+                var endDate = new Date(startDate.getTime() + (parsedData.excusedAbsenceDay * 24 * 60 * 60 * 1000));
+                EndDate.val(endDate.toISOString().substring(0, 10));
+                var NumOfDays = $("#NumOfDays");
+                NumOfDays.val(parsedData.excusedAbsenceDay);
+                NumOfDays.prop("disabled", true);
+                EndDate.prop("disabled", true);
+            }
+            else if (permissionType == "AnnualLeave") {
+                var endDate = new Date(startDate.getTime());
+                endDate.setDate(startDate.getDate() + 1);
+                EndDate.val(endDate.toISOString().substring(0, 10));
+                var NumOfDays = $("#NumOfDays");
+                var diffTime = endDate.getTime() - startDate.getTime();
+                var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                NumOfDays.val(diffDays);
+                NumOfDays.prop("disabled", true);
+                EndDate.prop("disabled", false);
+            }
+            else {
+                var NumOfDays = $("#NumOfDays");
+                EndDate.prop("disabled", false);
+                NumOfDays.val("");
+                EndDate.val("");
+
+            }
+        }
+
+    </script>
+}

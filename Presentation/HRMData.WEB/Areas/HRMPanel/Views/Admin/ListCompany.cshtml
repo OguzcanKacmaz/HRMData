@@ -1,0 +1,189 @@
+﻿@model List<CompanyViewModel>
+
+@{
+    ViewData["Title"] = "Şirket İşlemleri";
+    string Success = (string)TempData["Success"]!;
+    string Error = (string)TempData["Error"]!;
+    var IsInManager = User.IsInRole("Manager");
+    var IsInAdmin = User.IsInRole("Admin");
+}
+
+@section HeadHRMPanel{
+    <link href="~/assets/css/bundles/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="~/assets/css/bundles/sweetalert.css" rel="stylesheet">
+}
+
+<div class="row ms-4">
+    <div class="col-lg-12 col-md-12 col-sm-12">
+        <div class="card">
+            <div class="header bg-admin rounded-top">
+                <h2>Tüm Şirketler</h2>
+            </div>
+            <div class="body">
+                <div class="table-responsive">
+                    <table class="table table-hover js-basic-example contact_list">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th class="text-center"> Ünvan</th>
+                                <th class="text-center"> Şirket İsmi</th>
+                                <th class="text-center"> Email Adresi </th>
+                                <th class="text-center"> Telefon </th>
+                                <th class="text-center"> Adresi</th>
+                                <th class="text-center"> Aksiyon </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var company in Model)
+                            {
+                                var guid = Guid.NewGuid().ToString();
+                                <tr class="odd gradeX">
+                                    <td class="table-img center">
+                                        <img src="~/img/Logo/@company.LogoMini" alt="">
+                                    </td>
+                                    <td class="text-center">@company.CompanyTitle</td>
+                                    <td class="text-center">@company.Name</td>
+                                    <td class="text-center">@company.Email</td>
+                                    <td class="text-center">@company.PhoneNumberFormat(company.PhoneNumber!)</td>
+                                    <td class="text-center">@company.Address</td>
+                                    <td class="text-center">
+                                        <!-- Button trigger modal -->
+                                        <div>
+                                            <a title="Detay" class="btn bg-transparent waves-effect shadow-none" data-bs-toggle="modal" data-bs-target="#staticBackdrop_@guid">
+                                                <i class="fas fa-info-circle fa-2x blue-text"></i>
+                                            </a>                                          
+                                        </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade " id="staticBackdrop_@guid" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content p-0 rounded-3 ">
+                                                    <div class="header card-bg-header d-flex justify-content-between align-items-baseline">
+                                                        <h2 class="white-text">
+                                                            Şirket Detayları
+                                                        </h2>
+                                                        <button class="btn bg-transparent shadow-none" type="button" data-bs-dismiss="modal" aria-label="Close">
+                                                            <i class="material-icons text-white">close</i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="body py-0">
+                                                        <div class="row clearfix">
+                                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mb-0">
+                                                                <div class="card profile-header">
+                                                                    <div class="body">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-4 col-md-4 col-12">
+                                                                                <div class="profile-image float-md-right">
+                                                                                    <img src="~/img/Logo/@company.Logo" alt="" width="150px">
+                                                                                </div>
+                                                                                <div class="mt-3">
+                                                                                    <a href="mailto:@company.Email"
+                                                                                   class="btn btn-outline-danger btn-border-radius">
+                                                                                        Mail Gönder
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-lg-8 col-md-8 col-12">
+                                                                                <h4 class="m-t-0 mb-3">@company.Name</h4>
+                                                                                <p class="job_post font-15">@company.CompanyTitle</p>
+                                                                                <p class="font-13">@company.Address</p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="body py-0">
+                                                            <div class="row">
+                                                                <div class="col-md-6 col-6 b-r text-start">
+                                                                    <strong>Vergi Numarası</strong>
+                                                                    <br>
+                                                                    <p>@company.TaxNumber</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-end">
+                                                                    <strong>Mersis Numarası</strong>
+                                                                    <br>
+                                                                    <p>@company.MersisNo</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-start">
+                                                                    <strong>Telefon Numarası</strong>
+                                                                    <br>
+                                                                    <p>@company.PhoneNumberFormat(company.PhoneNumber!)</p>
+                                                                </div>
+
+                                                                <div class="col-md-6 col-6 b-r text-end">
+                                                                    <strong>Sözleşme Başlangıç Tarihi</strong>
+                                                                    <br>
+                                                                    <p>@company.ContractStartDate.ToString("dd/MM/yyyy")</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-start">
+                                                                    <strong>Sözleşme Bitiş Tarihi</strong>
+                                                                    <br>
+                                                                    <p>@company.ContractEndDate.ToString("dd/MM/yyyy")</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-end">
+                                                                    <strong>Vergi Dairesi</strong>
+                                                                    <br>
+                                                                    <p>@company.TaxAdministration</p>
+                                                                </div>                                                               
+                                                                <div class="col-md-6 col-6 b-r text-start">
+                                                                    <strong>Çalışan Sayısı</strong>
+                                                                    <br>
+                                                                    <p>@company.EmployeeCount</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-end">
+                                                                    <strong>Email Adresi</strong>
+                                                                    <br>
+                                                                    <p>@company.Email</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-start">
+                                                                    <strong>Kuruluş Yılı</strong>
+                                                                    <br>
+                                                                    <p>@company.FoundationYear</p>
+                                                                </div>
+                                                                <div class="col-md-6 col-6 b-r text-end">
+                                                                    <strong>Durum</strong>
+                                                                    <br>
+                                                                    <p>@(company.IsActive == HRMData.Domain.Entities.Enums.Status.Active ? "Aktif" : "Pasif")</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>                                                    
+                                                    </div>
+                                                    <div class="modal-footer mb-4">
+                                                        <button class="btn btn-secondary me-4 @(IsInManager ? "bg-blue-grey": IsInAdmin ? "bg-admin": "card-bg-header")" data-bs-dismiss="modal">Kapat</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+
+
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section ScriptsHRMPanel{
+    <script src="~/assets/js/table.min.js"></script>
+    <script src="~/assets/js/pages/tables/jquery-datatable.js"></script>
+    <script src="~/assets/js/pages/ui/dialogs.js"></script>
+    <script src="~/assets/js/bundles/sweetalert.min.js"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        let success = "@Success";
+        let error = "@Error"
+        if (success)
+            messageSuccessShow(success)
+        else if (error)
+            messageErrorShow(error)
+    </script>
+
+
+}

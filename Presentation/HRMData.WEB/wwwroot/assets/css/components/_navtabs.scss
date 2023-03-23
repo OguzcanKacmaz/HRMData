@@ -1,0 +1,92 @@
+﻿/*
+ *  Document   : _navtabs.scss
+ *  Author     : RedStar Template
+ *  Description: This scss file for navbar tabs style classes
+ */
+.nav-tabs {
+  border-bottom: 2px solid #eee;
+
+  > li {
+    position: relative;
+    top: 3px;
+    left: -2px;
+
+    > a {
+      color: #999 !important;
+      height: 39px;
+      display: block;
+      padding: 0 11px;
+      line-height: 2rem;
+      margin: 8px 0 0 0;
+
+      &:hover,
+      &:active,
+      &:focus {
+        background-color: transparent !important;
+      }
+
+      &:before {
+        content: "";
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 0;
+        border-bottom: 2px solid #2196f3;
+        bottom: 2px;
+        @include transform(scaleX(0));
+        @include transition(0.1s ease-in);
+      }
+
+      .material-icons {
+        position: relative;
+        top: 7px;
+        margin-bottom: 8px;
+      }
+    }
+  }
+
+  li {
+    a.active {
+      color: #222 !important;
+
+      &:hover,
+      &:active,
+      &:focus {
+        background-color: transparent !important;
+      }
+
+      &:before {
+        @include transform(scaleX(1));
+      }
+    }
+  }
+
+  + .tab-content {
+    padding: 15px 0;
+  }
+}
+.tab-nav-right {
+  > li > a:before {
+    border-bottom: 0px solid transparent !important;
+  }
+}
+.userlist-tab {
+  margin: 8px 10px;
+  img {
+    border-radius: 50% !important;
+  }
+  a:before {
+    top: 35px;
+  }
+}
+@each $key, $val in $colors {
+  .nav-tabs.tab-col-#{"" + $key} {
+    > li {
+      > a {
+        &:before {
+          border-bottom: 2px solid $val;
+        }
+      }
+    }
+  }
+}
