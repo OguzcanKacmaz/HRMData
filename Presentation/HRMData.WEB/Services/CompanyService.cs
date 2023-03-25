@@ -34,13 +34,14 @@ namespace HRMData.WEB.Services
                 company.IsActive = Domain.Entities.Enums.Status.Active;
             else
                 company.IsActive = Domain.Entities.Enums.Status.Passive;
+            company.RemainingEmployeeCount = vm.EmployeeCount;
             await _companyRepository.AddAsync(company);
         }
 
         public async Task<bool> CompanyEmployeeCountCheck(string companyId)
         {
             var company = await _companyRepository.GetByIdAsync(companyId);
-            if (company!.EmployeeCount == 0)
+            if (company!.RemainingEmployeeCount == 0)
             {
                 return false;
             }

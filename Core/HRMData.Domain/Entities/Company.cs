@@ -17,6 +17,7 @@ namespace HRMData.Domain.Entities
         public string Address { get; set; } = null!;
         public string Email { get; set; } = null!;
         public int EmployeeCount { get; set; }
+        public int RemainingEmployeeCount { get; set; }
         public int FoundationYear { get; set; }
         public DateTime ContractStartDate { get; set; }
         public DateTime ContractEndDate { get; set; }

@@ -440,7 +440,7 @@ namespace HRMData.WEB.Services
             }
             var password = PasswordGenerator.GeneratePassword();
             await _userManager.CreateAsync(personel, password);
-            company!.EmployeeCount--;
+            company!.RemainingEmployeeCount--;
             await _companyRepository.UpdateAsync(company);
             var user = await _userManager.GetUserAsync(_httpContextAccessor.HttpContext!.User);
             var IsInAdmin = await _userManager.IsInRoleAsync(user, "Admin");
